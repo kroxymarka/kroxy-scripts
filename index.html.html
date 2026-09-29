@@ -44,7 +44,7 @@
             gap: 16px;
         }
 
-        /* Soldan Sağa Dalğalanan Logo Text */
+        /* Logo Text */
         .logo-text {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(1.3rem, 4vw, 1.8rem);
@@ -97,7 +97,7 @@
             font-size: 0.9rem;
         }
 
-        /* Main Container & Header */
+        /* Main Container */
         .container {
             width: 100%;
             max-width: 1280px;
@@ -132,14 +132,14 @@
             white-space: nowrap;
         }
 
-        /* Responsiv Grid Sxemi */
+        /* Responsive Grid */
         .script-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
             gap: 20px;
         }
 
-        /* Script Kartı */
+        /* Script Card */
         .script-card {
             background: rgba(15, 8, 30, 0.85);
             border: 1px solid rgba(168, 85, 247, 0.25);
@@ -189,7 +189,7 @@
             flex-shrink: 0;
         }
 
-        /* Kopyala Düyməsi */
+        /* Copy Button */
         .btn-copy {
             background: linear-gradient(135deg, #7e22ce 0%, #a855f7 100%);
             color: #fff;
@@ -267,7 +267,7 @@
             font-weight: 500;
         }
 
-        /* Mobil Cihaz Xüsusi Uyğunlaşması */
+        /* Mobile Adjustments */
         @media (max-width: 600px) {
             .navbar {
                 flex-direction: column;
@@ -317,23 +317,21 @@
             <span id="scriptCount">10 Scripts</span>
         </div>
 
-        <div class="script-grid" id="scriptGrid">
-            <!-- Script Kartları JavaScript ilə Yüklənir -->
-        </div>
+        <div class="script-grid" id="scriptGrid"></div>
     </div>
 
     <script>
         const scriptsData = [
-            { name: "Chilli Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()' },
-            { name: "Tsuo Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Tsuo7/TsuoHub/main/stealanegg"))()' },
-            { name: "Axon Hub", code: 'loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/97c3f6db55a2cf72141537a85458e5a7.lua"))()' },
-            { name: "Foxname Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/Fn-stealanegg.lua"))()' },
-            { name: "Rift Hub", code: 'loadstring(game:HttpGet("https://rifton.top/loader.lua"))()' },
-            { name: "OMG Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua"))()' },
-            { name: "Clover Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Ryuun0x/Clover/main/main.lua"))()' },
-            { name: "Ajjans Hub", code: 'loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/359e97f8618e9008afe5f496184ebb7c.lua"))()' },
-            { name: "Solix Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/porqueijjmzm1/cool/main/StealAEgg"))()' },
-            { name: "Pig Hub", code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/mopsscript7-gif/steal-an-egg/refs/heads/main/script.lua"))()' }
+            { name: "Chilli Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua\"))()" },
+            { name: "Tsuo Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/Tsuo7/TsuoHub/main/stealanegg\"))()" },
+            { name: "Axon Hub", code: "loadstring(game:HttpGet(\"https://api.luarmor.net/files/v3/loaders/97c3f6db55a2cf72141537a85458e5a7.lua\"))()" },
+            { name: "Foxname Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/Fn-stealanegg.lua\"))()" },
+            { name: "Rift Hub", code: "loadstring(game:HttpGet(\"https://rifton.top/loader.lua\"))()" },
+            { name: "OMG Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua\"))()" },
+            { name: "Clover Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/Ryuun0x/Clover/main/main.lua\"))()" },
+            { name: "Ajjans Hub", code: "loadstring(game:HttpGet(\"https://api.luarmor.net/files/v4/loaders/359e97f8618e9008afe5f496184ebb7c.lua\"))()" },
+            { name: "Solix Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/porqueijjmzm1/cool/main/StealAEgg\"))()" },
+            { name: "Pig Hub", code: "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/mopsscript7-gif/steal-an-egg/refs/heads/main/script.lua\"))()" }
         ];
 
         const grid = document.getElementById('scriptGrid');
@@ -342,7 +340,7 @@
             grid.innerHTML = '';
             document.getElementById('scriptCount').innerText = `${data.length} Scripts`;
 
-            data.forEach((item) => {
+            data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'script-card';
                 card.innerHTML = `
@@ -350,7 +348,7 @@
                         <div class="script-title">
                             <i class="fa-solid fa-code"></i> ${item.name}
                         </div>
-                        <button class="btn-copy" onclick="copyScript('${encodeURIComponent(item.code)}', this)">
+                        <button class="btn-copy" id="btn-${index}">
                             <i class="fa-regular fa-copy"></i> Copy
                         </button>
                     </div>
@@ -361,18 +359,19 @@
                     </div>
                 `;
                 grid.appendChild(card);
+
+                document.getElementById(`btn-${index}`).addEventListener('click', function() {
+                    copyScript(item.code, this);
+                });
             });
         }
 
-        function copyScript(encodedCode, btn) {
-            const code = decodeURIComponent(encodedCode);
-            
-            // Mobil və Desktop uyğun kopyalama
+        function copyScript(codeText, btn) {
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(code).then(() => setCopiedUI(btn));
+                navigator.clipboard.writeText(codeText).then(() => setCopiedUI(btn));
             } else {
                 let textArea = document.createElement("textarea");
-                textArea.value = code;
+                textArea.value = codeText;
                 textArea.style.position = "fixed";
                 textArea.style.left = "-999999px";
                 document.body.appendChild(textArea);
@@ -405,7 +404,6 @@
             renderScripts(filtered);
         }
 
-        // İlkin yüklənmə
         renderScripts(scriptsData);
     </script>
 </body>
