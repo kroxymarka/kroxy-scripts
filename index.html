@@ -1066,6 +1066,8 @@ Qaydalar:
             return puterLoading;
         }
 
+        loadPuter().catch(() => {});
+
         function extractText(r) {
             if (typeof r === "string") return r;
             if (r && r.message && r.message.content !== undefined) {
@@ -1078,43 +1080,53 @@ Qaydalar:
         }
 
         async function onlineAnswer(messages) {
-            // 1) Puter.js
             try {
                 await withTimeout(loadPuter(), 25000);
-                // Güclüdən başlayaraq sınanır; model əlçatmazdırsa növbətisinə keçir
-                const MODELS = [
-                    "deepseek/deepseek-v4-pro",
-                    "openai/gpt-5.5",
-                    "z-ai/glm-5.3",
-                    "openai/gpt-5.4-mini",
-                    undefined
-                ];
-                for (const mdl of MODELS) {
-                    try {
-                        const r = await withTimeout(puter.ai.chat(messages, mdl ? { model: mdl } : {}), 120000);
-                        const t = extractText(r);
-                        if (t && t.trim()) { console.log("AI modeli:", mdl || "default"); return t; }
-                    } catch (e) {
-                        const msg = (e && (e.message || e.error || e.code)) || e;
-                        console.log("Puter model xətası (" + (mdl || "default") + "):", msg);
-                        // İstifadəçi giriş pəncərəsini bağladısa, təkrar-təkrar sınama
-                        if (/cancel|denied|auth|sign|login/i.test(String(msg) + String(e && e.code))) break;
+            } catch (e) {
+                console.warn("Puter yüklənmədi. Səbəb:", e && e.message ? e.message : e, "| səhifə:", location.href);
+                return null;
+            }
+            // Llama 4 birinci; əlçatmazdırsa növbəti model sınanır
+            const MODELS = [
+                "meta-llama/llama-4-maverick",
+                "meta-llama/llama-4-scout",
+                "deepseek/deepseek-v4-pro",
+                "openai/gpt-5.5",
+                undefined
+            ];
+            for (const mdl of MODELS) {
+                try {
+                    const opts = mdl ? { model: mdl, stream: true } : { stream: true };
+                    const r = await withTimeout(puter.ai.chat(messages, opts), 60000);
+                    let acc = "";
+                    if (r && typeof r[Symbol.asyncIterator] === "function") {
+                        let last = 0;
+                        for await (const part of r) {
+                            const d = part && (part.text || (part.message && part.message.content) || "");
+                            if (!d) continue;
+                            acc += d;
+                            const now = Date.now();
+                            if (now - last > 120) {
+                                last = now;
+                                const el = getLive();
+                                if (el) {
+                                    el.innerHTML = formatAiText(acc);
+                                    const box = document.getElementById("aiChatBox");
+                                    if (box) box.scrollTop = box.scrollHeight;
+                                }
+                            }
+                        }
+                    } else {
+                        acc = extractText(r);
                     }
+                    if (acc && acc.trim()) { console.log("AI modeli:", mdl || "default"); return acc; }
+                } catch (e) {
+                    const msg = (e && (e.message || e.error || e.code)) || e;
+                    console.log("Puter model xətası (" + (mdl || "default") + "):", msg);
+                    // İstifadəçi giriş pəncərəsini bağladısa, təkrar-təkrar sınama
+                    if (/cancel|denied|auth|sign|login/i.test(String(msg) + String(e && e.code))) break;
                 }
-            } catch (e) { console.warn("Puter yüklənmədi. Səbəb:", e && e.message ? e.message : e, "| online:", navigator.onLine, "| səhifə:", location.href); }
-
-            // 2) Ehtiyat endpoint
-            try {
-                const res = await withTimeout(fetch("https://text.pollinations.ai/openai", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ model: "openai", messages: messages })
-                }), 15000);
-                if (res.ok) {
-                    const t = extractText(await res.json());
-                    if (t && t.trim()) return t;
-                }
-            } catch (e) { console.warn("Ehtiyat endpoint alınmadı. Səbəb:", e && e.name, e && e.message); }
+            }
             return null;
         }
 
@@ -1122,7 +1134,7 @@ Qaydalar:
         const isMobileDev = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
         const LOCAL_TIERS = isMobileDev
             ? ["Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC", "Qwen2.5-1.5B-Instruct-q4f16_1-MLC", "Qwen2.5-0.5B-Instruct-q4f16_1-MLC"]
-            : ["Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC", "Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC", "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC"];
+            : ["Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC", "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC"];
 
         let localEngine = null, localModelId = null, localLoading = null, localFailed = false, localLib = null;
 
@@ -1158,7 +1170,8 @@ Qaydalar:
                             localEngine = await localLib.CreateMLCEngine(id, {
                                 initProgressCallback: (pr) => {
                                     const pct = pr && typeof pr.progress === "number" ? Math.round(pr.progress * 100) + "% " : "";
-                                    showProgress("⏳ " + pct + "Model yüklənir, bu səhifəni bağlama...");
+                                    const info = pr && pr.text ? String(pr.text).slice(0, 80) : "";
+                                    showProgress("⏳ " + pct + "Brauzer modeli yüklənir. " + info);
                                 }
                             });
                             localModelId = id;
@@ -1246,13 +1259,13 @@ Qaydalar:
 
             aiHistory.push({ role: "user", content: fullPrompt });
             const messages = [{ role: "system", content: SYS_PROMPT }, ...aiHistory.slice(-12)];
-            const online = (await browserAnswer(messages)) || (await onlineAnswer(messages));
+            const online = (await onlineAnswer(messages)) || (await browserAnswer(messages));
             if (online) {
                 aiHistory.push({ role: "assistant", content: online });
                 return formatAiText(online);
             }
             aiHistory.pop();
-            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">⚠️ Brauzer AI işə düşmədi (cihaz/brauzer WebGPU dəstəkləmir və ya model yüklənmədi), daxili rejimdə cavab verildi. Kompüterdə Chrome və ya Edge ilə github.io ünvanından aç.</span>';
+            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">⚠️ Onlayn AI (Llama 4) və brauzer AI qoşulmadı, daxili rejimdə cavab verildi. Saytı github.io ünvanından aç, Puter icazəsini ver.</span>';
         }
 
         function handleAiKeyDown(e) {
