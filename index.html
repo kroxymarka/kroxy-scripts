@@ -659,7 +659,7 @@
 
         <div class="ai-wrapper" id="aiWrapper">
             <div class="ai-chat-box" id="aiChatBox">
-                <div class="ai-msg ai-msg-bot">KROXY AI Burada! Buyurun sualınızı cavablandırmağa hazıram!</div>
+                <div class="ai-msg ai-msg-bot">⚡ KROXY AI Aktivdir! Mənə sual verə və ya kod köməyi istəyə bilərsiniz.</div>
             </div>
 
             <div class="ai-file-bar" id="aiFileBar">
@@ -1130,14 +1130,6 @@ Qaydalar:
             return null;
         }
 
-        /* ---------- BRAUZER AI (WebLLM): model birbaşa cihazda işləyir, hesab/API yoxdur ---------- */
-        const isMobileDev = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-        const LOCAL_TIERS = isMobileDev
-            ? ["Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC", "Qwen2.5-1.5B-Instruct-q4f16_1-MLC", "Qwen2.5-0.5B-Instruct-q4f16_1-MLC"]
-            : ["Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC", "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC"];
-
-        let localEngine = null, localModelId = null, localLoading = null, localFailed = false, localLib = null;
-
         function getLive() {
             const el = document.querySelector(".ai-msg-thinking");
             if (el) {
@@ -1148,101 +1140,6 @@ Qaydalar:
             }
             return document.querySelector('[data-live="1"]');
         }
-        function showProgress(text) {
-            const live = getLive();
-            if (live) live.innerHTML = '<span style="font-size:.8rem;opacity:.85">' + escHtml(text) + "</span>";
-        }
-
-        async function ensureLocalEngine() {
-            if (localEngine) return localEngine;
-            if (localFailed) return null;
-            if (localLoading) return localLoading;
-            localLoading = (async () => {
-                try {
-                    if (!navigator.gpu || !(await navigator.gpu.requestAdapter())) throw new Error("WebGPU yoxdur");
-                    showProgress("⏳ Brauzer AI hazırlanır (kitabxana yüklənir)...");
-                    localLib = await import("https://esm.run/@mlc-ai/web-llm");
-                    const available = new Set(localLib.prebuiltAppConfig.model_list.map(m => m.model_id));
-                    const tiers = LOCAL_TIERS.filter(id => available.has(id));
-                    for (const id of tiers) {
-                        try {
-                            showProgress("⏳ Model yüklənir: " + id.replace("-q4f16_1-MLC", "") + " (ilk dəfə uzun çəkir, sonra keşdən açılır)...");
-                            localEngine = await localLib.CreateMLCEngine(id, {
-                                initProgressCallback: (pr) => {
-                                    const pct = pr && typeof pr.progress === "number" ? Math.round(pr.progress * 100) + "% " : "";
-                                    const info = pr && pr.text ? String(pr.text).slice(0, 80) : "";
-                                    showProgress("⏳ " + pct + "Brauzer modeli yüklənir. " + info);
-                                }
-                            });
-                            localModelId = id;
-                            console.log("Brauzer AI modeli:", id);
-                            return localEngine;
-                        } catch (e) {
-                            console.warn("Model yüklənmədi:", id, e && e.message ? e.message : e);
-                            localEngine = null;
-                        }
-                    }
-                    throw new Error("Heç bir model yüklənmədi");
-                } catch (e) {
-                    console.warn("Brauzer AI əlçatan deyil:", e && e.message ? e.message : e);
-                    localFailed = true;
-                    return null;
-                } finally {
-                    localLoading = null;
-                }
-            })();
-            return localLoading;
-        }
-
-        function fitMessages(messages) {
-            // Kiçik modelin kontekst pəncərəsinə (~4096 token) sığdır
-            const sys = messages[0];
-            const rest = messages.slice(1).map((m, i, arr) => ({
-                role: m.role,
-                content: m.content.length > (i === arr.length - 1 ? 6000 : 1500)
-                    ? m.content.slice(0, i === arr.length - 1 ? 6000 : 1500) + "\n...(kəsildi)"
-                    : m.content
-            }));
-            let total = sys.content.length + rest.reduce((a, m) => a + m.content.length, 0);
-            while (rest.length > 1 && total > 9500) { total -= rest[0].content.length; rest.shift(); }
-            return [sys, ...rest];
-        }
-
-        async function browserAnswer(messages) {
-            const engine = await ensureLocalEngine();
-            if (!engine) return null;
-            try {
-                const stream = await engine.chat.completions.create({
-                    messages: fitMessages(messages),
-                    stream: true,
-                    temperature: 0.4,
-                    top_p: 0.9,
-                    max_tokens: 1400
-                });
-                let acc = "";
-                let last = 0;
-                for await (const chunk of stream) {
-                    const d = chunk.choices && chunk.choices[0] && chunk.choices[0].delta && chunk.choices[0].delta.content;
-                    if (!d) continue;
-                    acc += d;
-                    const now = Date.now();
-                    if (now - last > 120) {
-                        last = now;
-                        const el = getLive();
-                        if (el) {
-                            el.innerHTML = formatAiText(acc);
-                            const box = document.getElementById("aiChatBox");
-                            if (box) box.scrollTop = box.scrollHeight;
-                        }
-                    }
-                }
-                return acc.trim() ? acc : null;
-            } catch (e) {
-                console.warn("Brauzer AI cavab xətası:", e && e.message ? e.message : e);
-                return null;
-            }
-        }
-
         async function generateRealAiResponse(promptText, attachment) {
             const low = promptText.toLowerCase();
             if (low.startsWith("/imagine") || low.includes("şəkil yarat")) {
@@ -1259,13 +1156,13 @@ Qaydalar:
 
             aiHistory.push({ role: "user", content: fullPrompt });
             const messages = [{ role: "system", content: SYS_PROMPT }, ...aiHistory.slice(-12)];
-            const online = (await onlineAnswer(messages)) || (await browserAnswer(messages));
+            const online = await onlineAnswer(messages);
             if (online) {
                 aiHistory.push({ role: "assistant", content: online });
                 return formatAiText(online);
             }
             aiHistory.pop();
-            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">⚠️ Onlayn AI (Llama 4) və brauzer AI qoşulmadı, daxili rejimdə cavab verildi. Saytı github.io ünvanından aç, Puter icazəsini ver.</span>';
+            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">⚠️ Llama 4 ilə əlaqə qurulmadı, daxili rejimdə cavab verildi. Saytı github.io ünvanından aç və Puter icazəsini ver.</span>';
         }
 
         function handleAiKeyDown(e) {
