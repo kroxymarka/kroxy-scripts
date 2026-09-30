@@ -893,9 +893,8 @@
         }
 
         /* ================= KROXY AI ENGINE =================
-           1) Onlayn AI (Puter.js, API açarı yoxdur)
-           2) Ehtiyat onlayn endpoint
-           3) Daxili mühərrik: internet olmasa da həmişə cavab verir */
+           1) Güclü AI: Cloudflare Workers AI (Llama 4), yükləmə yoxdur, API açarı yoxdur
+           2) Daxili mühərrik: Worker qoşulmayıbsa və ya cavab vermirsə cavab verir */
 
         function norm(s) {
             return (s || "").toLowerCase()
@@ -1052,82 +1051,86 @@ Qaydalar:
             return Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
         }
 
-        let puterLoading = null;
-        function loadPuter() {
-            if (window.puter) return Promise.resolve();
-            if (puterLoading) return puterLoading;
-            puterLoading = new Promise((resolve, reject) => {
-                const sc = document.createElement("script");
-                sc.src = "https://js.puter.com/v2/";
-                sc.onload = resolve;
-                sc.onerror = () => { puterLoading = null; reject(new Error("js.puter.com skripti yüklənmədi (bloklanıb və ya əlçatmazdır)")); };
-                document.head.appendChild(sc);
+        /* ---------- GÜCLÜ AI (Cloudflare Workers AI, Llama 4) ----------
+           Worker-i bir dəfə qurandan sonra onun ünvanını aşağıya yaz.
+           Məsələn: "https://kroxy-ai.SENIN-ADIN.workers.dev" */
+        const AI_WORKER_URL = "";
+
+        let workerState = AI_WORKER_URL ? "idle" : "unset";
+
+        function fitMessages(messages, budget, lastLim) {
+            const sys = messages[0];
+            const rest = messages.slice(1).map((m, i, arr) => {
+                const lim = i === arr.length - 1 ? lastLim : 3000;
+                return { role: m.role, content: m.content.length > lim ? m.content.slice(0, lim) + "\n...(kəsildi)" : m.content };
             });
-            return puterLoading;
+            let total = sys.content.length + rest.reduce((a, m) => a + m.content.length, 0);
+            while (rest.length > 1 && total > budget) { total -= rest[0].content.length; rest.shift(); }
+            return [sys, ...rest];
         }
 
-        loadPuter().catch(() => {});
-
-        function extractText(r) {
-            if (typeof r === "string") return r;
-            if (r && r.message && r.message.content !== undefined) {
-                const c = r.message.content;
-                return Array.isArray(c) ? c.map(x => x.text || "").join("") : String(c);
+        function pickToken(j) {
+            if (!j) return "";
+            if (typeof j.response === "string") return j.response;
+            const c = j.choices && j.choices[0];
+            if (c) {
+                if (c.delta && typeof c.delta.content === "string") return c.delta.content;
+                if (c.message && typeof c.message.content === "string") return c.message.content;
             }
-            if (r && r.choices && r.choices[0] && r.choices[0].message) return r.choices[0].message.content;
-            if (r && typeof r.toString === "function" && r.toString() !== "[object Object]") return r.toString();
+            if (typeof j.result === "string") return j.result;
+            if (j.result && typeof j.result.response === "string") return j.result.response;
             return "";
         }
 
-        async function onlineAnswer(messages) {
+        async function workerAnswer(messages) {
+            if (!AI_WORKER_URL) return null;
             try {
-                await withTimeout(loadPuter(), 25000);
+                const res = await withTimeout(fetch(AI_WORKER_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ messages: fitMessages(messages, 30000, 18000) })
+                }), 40000);
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                const ct = res.headers.get("content-type") || "";
+                if (!res.body || ct.indexOf("event-stream") === -1) {
+                    const t = pickToken(await res.json());
+                    workerState = "ok";
+                    return t && t.trim() ? t : null;
+                }
+                const reader = res.body.getReader();
+                const dec = new TextDecoder();
+                let buf = "", acc = "", last = 0;
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    buf += dec.decode(value, { stream: true });
+                    const lines = buf.split("\n");
+                    buf = lines.pop();
+                    for (const line of lines) {
+                        const l = line.trim();
+                        if (!l.startsWith("data:")) continue;
+                        const payload = l.slice(5).trim();
+                        if (!payload || payload === "[DONE]") continue;
+                        try { acc += pickToken(JSON.parse(payload)); } catch (e) {}
+                    }
+                    const now = Date.now();
+                    if (acc && now - last > 100) {
+                        last = now;
+                        const el = getLive();
+                        if (el) {
+                            el.innerHTML = formatAiText(acc);
+                            const box = document.getElementById("aiChatBox");
+                            if (box) box.scrollTop = box.scrollHeight;
+                        }
+                    }
+                }
+                workerState = "ok";
+                return acc.trim() ? acc : null;
             } catch (e) {
-                console.warn("Puter yüklənmədi. Səbəb:", e && e.message ? e.message : e, "| səhifə:", location.href);
+                console.warn("Güclü AI cavab vermədi:", e && e.message ? e.message : e);
+                workerState = "failed";
                 return null;
             }
-            // Llama 4 birinci; əlçatmazdırsa növbəti model sınanır
-            const MODELS = [
-                "meta-llama/llama-4-maverick",
-                "meta-llama/llama-4-scout",
-                "deepseek/deepseek-v4-pro",
-                "openai/gpt-5.5",
-                undefined
-            ];
-            for (const mdl of MODELS) {
-                try {
-                    const opts = mdl ? { model: mdl, stream: true } : { stream: true };
-                    const r = await withTimeout(puter.ai.chat(messages, opts), 60000);
-                    let acc = "";
-                    if (r && typeof r[Symbol.asyncIterator] === "function") {
-                        let last = 0;
-                        for await (const part of r) {
-                            const d = part && (part.text || (part.message && part.message.content) || "");
-                            if (!d) continue;
-                            acc += d;
-                            const now = Date.now();
-                            if (now - last > 120) {
-                                last = now;
-                                const el = getLive();
-                                if (el) {
-                                    el.innerHTML = formatAiText(acc);
-                                    const box = document.getElementById("aiChatBox");
-                                    if (box) box.scrollTop = box.scrollHeight;
-                                }
-                            }
-                        }
-                    } else {
-                        acc = extractText(r);
-                    }
-                    if (acc && acc.trim()) { console.log("AI modeli:", mdl || "default"); return acc; }
-                } catch (e) {
-                    const msg = (e && (e.message || e.error || e.code)) || e;
-                    console.log("Puter model xətası (" + (mdl || "default") + "):", msg);
-                    // İstifadəçi giriş pəncərəsini bağladısa, təkrar-təkrar sınama
-                    if (/cancel|denied|auth|sign|login/i.test(String(msg) + String(e && e.code))) break;
-                }
-            }
-            return null;
         }
 
         function getLive() {
@@ -1156,13 +1159,15 @@ Qaydalar:
 
             aiHistory.push({ role: "user", content: fullPrompt });
             const messages = [{ role: "system", content: SYS_PROMPT }, ...aiHistory.slice(-12)];
-            const online = await onlineAnswer(messages);
+            const online = await workerAnswer(messages);
             if (online) {
                 aiHistory.push({ role: "assistant", content: online });
                 return formatAiText(online);
             }
             aiHistory.pop();
-            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">⚠️ Llama 4 ilə əlaqə qurulmadı, daxili rejimdə cavab verildi. Saytı github.io ünvanından aç və Puter icazəsini ver.</span>';
+            const note = workerState === "unset" ? "ℹ️ Güclü AI (Llama 4) hələ qoşulmayıb, daxili rejim cavab verdi."
+                : "⚠️ Güclü AI serveri cavab vermədi (gündəlik pulsuz limit bitmiş ola bilər), daxili rejim cavab verdi.";
+            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">' + note + "</span>";
         }
 
         function handleAiKeyDown(e) {
