@@ -606,7 +606,20 @@
             .ai-wrapper { height: calc(100dvh - 190px); border-radius: 16px; }
             .ai-msg { max-width: 92%; }
         }
-    </style>
+    
+        .ai-msg-bot pre.ai-code { background:#0b1020; border:1px solid rgba(168,85,247,0.3); border-radius:10px; padding:10px 12px; margin:8px 0; overflow-x:auto; font-size:12.5px; line-height:1.5; text-align:left; }
+        .ai-msg-bot pre.ai-code code { font-family:Consolas,Menlo,monospace; color:#c4b5fd; white-space:pre; }
+        .ai-msg-bot code.ai-inline { background:rgba(168,85,247,0.2); padding:1px 6px; border-radius:6px; font-family:Consolas,Menlo,monospace; font-size:12.5px; }
+
+        .k-ico { width: 1em; height: 1em; vertical-align: -0.14em; display: inline-block; }
+        .brand-icon .k-ico { width: 20px; height: 20px; vertical-align: 0; }
+        .script-title .k-ico { width: 1.15em; height: 1.15em; color: var(--secondary-neon); margin-right: 2px; }
+
+        i.k-i { font-style: normal; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+        .search-box i.k-i { pointer-events: none; }
+        .ai-attach-btn .k-ico, .ai-send-btn .k-ico { width: 1.15rem; height: 1.15rem; }
+        .attach-menu-btn .k-ico { width: 1.15rem; height: 1.15rem; }
+</style>
 </head>
 <body class="hide-scrollbar">
 
@@ -616,7 +629,7 @@
 
     <div class="navbar">
         <div class="brand">
-            <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+            <div class="brand-icon"><svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="6.5,9 10.5,12 6.5,15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12.5" y1="15.5" x2="17.5" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
             <div class="logo-text">KROXY SCRIPTS</div>
         </div>
     </div>
@@ -624,16 +637,16 @@
     <div class="container">
         
         <div class="search-box" id="searchContainer">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></i>
             <input type="text" id="searchInput" placeholder="Skript adı ilə axtar..." onkeyup="filterScripts()">
         </div>
 
         <div class="tabs-header">
             <button class="tab-btn active" id="tabSteal" onclick="switchTab('steal')">
-                <i class="fa-solid fa-egg"></i> Steal An Egg
+                <svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C8 2 4.5 9 4.5 14a7.5 7.5 0 0 0 15 0C19.5 9 16 2 12 2z"/></svg> Steal An Egg
             </button>
             <button class="tab-btn" id="tabKroxyAI" onclick="switchTab('kroxyai')">
-                <i class="fa-solid fa-brain"></i> KROXY AI
+                <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 4.5A3 3 0 0 0 9 20h.5a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 9.5 4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 4.5A3 3 0 0 1 15 20h-.5a1.5 1.5 0 0 1-1.5-1.5v-13A1.5 1.5 0 0 1 14.5 4z"/><path d="M6 10.5h2.2M15.8 10.5H18M6.5 15h2M15.5 15h2"/></svg></i> KROXY AI
             </button>
         </div>
 
@@ -646,26 +659,26 @@
 
         <div class="ai-wrapper" id="aiWrapper">
             <div class="ai-chat-box" id="aiChatBox">
-                <div class="ai-msg ai-msg-bot">KROXY AI Həmişə köməyinizdə! Buyurun nə istiyirdiniz?</div>
+                <div class="ai-msg ai-msg-bot">KROXY AI Həmişə köməyinzdədir! Buyurun, nə istəyirdiniz?</div>
             </div>
 
             <div class="ai-file-bar" id="aiFileBar">
                 <span id="aiFileName">📁 fayl.txt</span>
-                <button onclick="removeAiFile()"><i class="fa-solid fa-xmark"></i> Ləğv et</button>
+                <button onclick="removeAiFile()"><i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></i> Ləğv et</button>
             </div>
 
             <div class="attach-menu" id="attachMenu">
                 <button class="attach-menu-btn" onclick="triggerInput('image')">
-                    <i class="fa-solid fa-image" style="color: #06b6d4;"></i> Şəkil Göndər
+                    <i class="k-i" style="color: #06b6d4;"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><polyline points="4,18 10,13 14,17 17,14 21,18"/></svg></i> Şəkil Göndər
                 </button>
                 <button class="attach-menu-btn" onclick="triggerInput('file')">
-                    <i class="fa-solid fa-file-code" style="color: #a855f7;"></i> Faylı Göndər
+                    <i class="k-i" style="color: #a855f7;"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h8l4.5 4.5V21.5H6z"/><polyline points="14,2.5 14,7 18.5,7"/><polyline points="10,12 8,14.5 10,17"/><polyline points="14,12 16,14.5 14,17"/></svg></i> Faylı Göndər
                 </button>
             </div>
 
             <div class="ai-input-area">
                 <div class="ai-attach-btn" onclick="toggleAttachMenu(event)" title="Əlavə et">
-                    <i class="fa-solid fa-paperclip"></i>
+                    <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l9-9a3.3 3.3 0 0 1 4.7 4.7l-9 9a1.7 1.7 0 0 1-2.4-2.4l8.2-8.2"/></svg></i>
                 </div>
 
                 <input type="file" id="aiImageUpload" accept="image/*" style="display: none;" onchange="handleAiFileUpload(event, 'image')">
@@ -674,7 +687,7 @@
                 <textarea id="aiInput" placeholder="Kodu və ya promptu bura yazın..." rows="1" onkeydown="handleAiKeyDown(event)"></textarea>
 
                 <button class="ai-send-btn" id="aiSendBtn" onclick="sendAiMessage()" title="Göndər">
-                    <i class="fa-solid fa-paper-plane"></i>
+                    <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2.5 3.2L22 12 2.5 20.8l3.6-8.8z"/><path fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1.6" stroke-linecap="round" d="M6.1 12h7"/></svg></i>
                 </button>
             </div>
         </div>
@@ -719,14 +732,14 @@
                 card.innerHTML = `
                     <div class="card-top">
                         <div class="script-title">
-                            <i class="fa-solid fa-terminal"></i> ${item.name}
+                            <svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="6.5,9 10.5,12 6.5,15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12.5" y1="15.5" x2="17.5" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> ${item.name}
                         </div>
                     </div>
                     <div class="code-box">
                         <div class="code-text">${item.code}</div>
                     </div>
                     <button class="btn-copy" onclick="copyScript(this)">
-                        Skripti Kopyala <i class="fa-regular fa-copy"></i>
+                        Skripti Kopyala <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/></svg></i>
                     </button>
                 `;
                 grid.appendChild(card);
@@ -760,10 +773,10 @@
         }
 
         function setCopiedState(btn) {
-            btn.innerHTML = `Kopyalandı <i class="fa-solid fa-check"></i>`;
+            btn.innerHTML = `Kopyalandı <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4.5,12.5 9.5,17.5 19.5,7"/></svg></i>`;
             btn.classList.add('copied');
             setTimeout(() => {
-                btn.innerHTML = `Skripti Kopyala <i class="fa-regular fa-copy"></i>`;
+                btn.innerHTML = `Skripti Kopyala <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/></svg></i>`;
                 btn.classList.remove('copied');
             }, 3000);
         }
@@ -879,60 +892,256 @@
             document.getElementById('aiFileBar').style.display = 'none';
         }
 
-        /* TAM İŞLƏK VƏ MÜTƏLƏQ CAVAB VERƏN AI ENGINE */
-        async function generateRealAiResponse(promptText, attachment) {
-            if (promptText.toLowerCase().startsWith("/imagine") || promptText.toLowerCase().includes("şəkil yarat")) {
-                let cleanPrompt = promptText.replace(/şəkil yarat/gi, "").replace(/\/imagine/gi, "").trim();
-                if (!cleanPrompt) cleanPrompt = "cyberpunk neon robot";
-                const img = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=800&height=500&nologo=true`;
-                return `🎨 <b>Yaradılan Şəkil: "${cleanPrompt}"</b><br><img class="ai-gen-img" src="${img}">`;
-            }
+        /* ================= KROXY AI ENGINE =================
+           1) Onlayn AI (Puter.js, API açarı yoxdur)
+           2) Ehtiyat onlayn endpoint
+           3) Daxili mühərrik: internet olmasa da həmişə cavab verir */
 
-            let fullPrompt = promptText;
-            if (attachment) {
-                if (attachment.type === 'file') {
-                    fullPrompt += `\n\n[Fayl Məzmunu - ${attachment.name}]:\n${attachment.content}`;
-                } else if (attachment.type === 'image') {
-                    fullPrompt += `\n\n[İstifadəçi Şəkil Əlavə Etdi: ${attachment.name}]`;
+        function norm(s) {
+            return (s || "").toLowerCase()
+                .replace(/ə/g, "e").replace(/ı/g, "i").replace(/İ/g, "i").replace(/ö/g, "o")
+                .replace(/ü/g, "u").replace(/ş/g, "s").replace(/ç/g, "c").replace(/ğ/g, "g");
+        }
+
+        function escHtml(s) {
+            return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // Mətni təhlükəsiz HTML-ə çevirir (kod bloku, **qalın**, `kod`, sətir keçidi)
+        function formatAiText(text) {
+            const parts = String(text).split(/```/);
+            let html = "";
+            parts.forEach((part, i) => {
+                if (i % 2 === 1) {
+                    const code = part.replace(/^[a-zA-Z0-9]*\n/, "");
+                    html += `<pre class="ai-code"><code>${escHtml(code.trim())}</code></pre>`;
+                } else {
+                    let t = escHtml(part);
+                    t = t.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+                         .replace(/`([^`\n]+)`/g, '<code class="ai-inline">$1</code>')
+                         .replace(/\n/g, "<br>");
+                    html += t;
                 }
-            }
+            });
+            return html;
+        }
 
-            const sysPrompt = "Sən KROXY AI-san. Luau, Roblox Studio, JS, Python üzrə mütəxəssissən. Suala aydın, səlis və köməkçi cavab ver.";
+        /* ---------- Bilik bazası ---------- */
+        const KB = [
+            { k: [/^(salam|slm|sabah|hello|hi|hey|selam|merheba)\b/], a: () => "Salam! 👋 Mən KROXY AI-yam. Roblox, Luau, JavaScript, Python barədə sual verə, kod və ya fayl göndərib izah istəyə bilərsən." },
+            { k: [/kimsen|adin nedir|sen kimsen|who are you/], a: () => "Mən KROXY AI-yam ⚡ Bu saytın köməkçisiyəm. Kod izah edir, xətaları tapır, Luau/JS/Python nümunələri verir və scriptlər barədə suallara cavab verirəm." },
+            { k: [/necesen|nece gedir|how are you/], a: () => "Əla, sağ ol! 😄 Sənə nə ilə kömək edim?" },
+            { k: [/sag ?ol|tesekkur|minnetdar|thanks|thank you/], a: () => "Buyur! 🙌 Başqa sualın olsa yaz." },
+            { k: [/nele ede bilersen|ne bilirsen|komek|help|\/help/], a: () => "Bunları edə bilərəm:\n• **Luau/Roblox** mövzuları: dəyişən, funksiya, dövr, table, event, RemoteEvent, DataStore, Tween, GUI\n• **JavaScript / Python** əsasları\n• **Xəta izahı**: məs. `attempt to index nil`\n• **Fayl analizi**: 📎 ilə .lua/.js/.py/.html göndər\n• **Riyazi hesab**: `12*(3+4)`\n• **Şəkil**: `/imagine cyberpunk robot`\n• Saytdakı **scriptlərin siyahısı**" },
+            { k: [/executor/], a: () => "**Executor** Roblox-da Luau skriptlərini icra etməyə çalışan xarici proqramdır. Bunlar Roblox-un qaydalarına ziddir və hesabın bloklanma riski var. Yükləməzdən əvvəl mənbəyə diqqət et, çünki saxta executorların çoxu zərərli proqramdır. ⚠️" },
+            { k: [/loadstring|httpget/], a: () => "`loadstring` mətn şəklindəki kodu funksiyaya çevirir, `game:HttpGet(url)` isə linkdən mətn yükləyir. Birlikdə uzaq serverdən script yükləyib işlədir:\n```lua\nloadstring(game:HttpGet(\"https://.../script.lua\"))()\n```\n⚠️ Bu, linkdəki kodu yoxlamadan işlədir. Tanımadığın linklərə etibar etmə." },
+            { k: [/deyisen|variable|local /], a: () => "Luau-da dəyişən `local` ilə yaradılır:\n```lua\nlocal ad = \"KROXY\"\nlocal xal = 10\nlocal aktiv = true\nprint(ad, xal, aktiv)\n```\n`local` işlətmək həm sürətlidir, həm də təmizdir." },
+            { k: [/funksiya|function/], a: () => "Luau-da funksiya:\n```lua\nlocal function topla(a, b)\n    return a + b\nend\nprint(topla(2, 3)) -- 5\n```\nJavaScript-də:\n```js\nconst topla = (a, b) => a + b;\nconsole.log(topla(2, 3));\n```" },
+            { k: [/dovr|loop|for dongu|while|dongu/], a: () => "Luau dövrləri:\n```lua\nfor i = 1, 5 do\n    print(i)\nend\n\nlocal n = 0\nwhile n < 3 do\n    n += 1\n    task.wait(1)\nend\n\nfor _, oyuncu in ipairs(game.Players:GetPlayers()) do\n    print(oyuncu.Name)\nend\n```" },
+            { k: [/table|cedvel|massiv|array|dictionary/], a: () => "Luau-da `table` həm siyahı, həm lüğət ola bilir:\n```lua\nlocal siyahi = {\"alma\", \"armud\"}\ntable.insert(siyahi, \"nar\")\nprint(#siyahi) -- 3\n\nlocal lugat = {ad = \"Ali\", yas = 20}\nprint(lugat.ad)\n```\nDiqqət: Luau-da indekslər **1-dən** başlayır." },
+            { k: [/remote ?event|remotefunction|client.*server|server.*client/], a: () => "**RemoteEvent** client ilə server arasında mesaj göndərir.\n```lua\n-- Server (Script)\nlocal ev = game.ReplicatedStorage.MyEvent\nev.OnServerEvent:Connect(function(oyuncu, mesaj)\n    print(oyuncu.Name, mesaj)\nend)\n\n-- Client (LocalScript)\ngame.ReplicatedStorage.MyEvent:FireServer(\"Salam\")\n```\nQayda: client-dən gələn məlumata heç vaxt tam etibar etmə, serverdə yoxla." },
+            { k: [/datastore|melumat saxla|save data/], a: () => "DataStore ilə oyunçu məlumatı saxlanır:\n```lua\nlocal DSS = game:GetService(\"DataStoreService\")\nlocal store = DSS:GetDataStore(\"OyuncuData\")\n\ngame.Players.PlayerAdded:Connect(function(p)\n    local ok, data = pcall(function()\n        return store:GetAsync(p.UserId)\n    end)\n    print(ok, data)\nend)\n```\nHər zaman `pcall` istifadə et, çünki sorğular uğursuz ola bilər." },
+            { k: [/tween/], a: () => "TweenService ilə hamar animasiya:\n```lua\nlocal TS = game:GetService(\"TweenService\")\nlocal info = TweenInfo.new(1, Enum.EasingStyle.Quad)\nlocal tween = TS:Create(workspace.Part, info, {Position = Vector3.new(0, 20, 0)})\ntween:Play()\n```" },
+            { k: [/gui|ekran|textbutton|frame|interfeys/], a: () => "Sadə GUI düyməsi (LocalScript):\n```lua\nlocal btn = script.Parent -- TextButton\nbtn.MouseButton1Click:Connect(function()\n    btn.Text = \"Basıldı!\"\nend)\n```\nGUI-ləri `StarterGui` içində `ScreenGui` altında yarat." },
+            { k: [/touched|toxun|part.*toxun/], a: () => "Part-a toxunma hadisəsi:\n```lua\nlocal part = script.Parent\npart.Touched:Connect(function(hit)\n    local hum = hit.Parent:FindFirstChild(\"Humanoid\")\n    if hum then\n        hum.Health = 0\n    end\nend)\n```" },
+            { k: [/leaderstats|xal sistemi|coin|pul sistemi/], a: () => "Leaderstats yaratmaq (Script, ServerScriptService):\n```lua\ngame.Players.PlayerAdded:Connect(function(p)\n    local ls = Instance.new(\"Folder\")\n    ls.Name = \"leaderstats\"\n    ls.Parent = p\n\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = ls\nend)\n```" },
+            { k: [/attempt to index nil|index nil/], a: () => "**attempt to index nil** demək olar ki, obyekt `nil`-dir, yəni tapılmayıb və ondan xassə oxumağa çalışırsan.\nSəbəblər: yanlış ad, obyekt hələ yüklənməyib, yanlış yerdə axtarırsan.\n```lua\nlocal part = workspace:WaitForChild(\"MyPart\")\nif part then\n    print(part.Position)\nend\n```\n`WaitForChild` obyekt görünənə qədər gözləyir." },
+            { k: [/attempt to call|call a nil/], a: () => "**attempt to call a nil value**: mövcud olmayan funksiyanı çağırırsan. Funksiya adını, yazılışını və funksiyanın çağırışdan **əvvəl** təyin olunduğunu yoxla." },
+            { k: [/infinite yield/], a: () => "**Infinite yield possible** xəbərdarlığı `WaitForChild`-in obyekti tapa bilmədiyini bildirir. Adı düzgün yaz və obyektin doğru yerdə olduğunu yoxla." },
+            { k: [/luau nedir|lua nedir|roblox nedir|roblox studio/], a: () => "**Luau** Roblox-un istifadə etdiyi, Lua əsaslı skript dilidir. **Roblox Studio** isə oyun düzəltdiyin proqramdır. Script (server), LocalScript (oyunçu tərəfi) və ModuleScript (təkrar istifadə olunan kod) növləri var." },
+            { k: [/javascript|\bjs\b|console\.log|const |let /], a: () => "JavaScript əsasları:\n```js\nconst ad = \"KROXY\";\nlet say = 0;\nfor (let i = 0; i < 3; i++) say += i;\nconsole.log(`${ad}: ${say}`);\n\nconst massiv = [1, 2, 3].map(x => x * 2);\n```" },
+            { k: [/python|\bpy\b|def /], a: () => "Python əsasları:\n```python\nad = \"KROXY\"\ndef salam(kim):\n    return f\"Salam, {kim}!\"\n\nfor i in range(3):\n    print(i, salam(ad))\n```" },
+            { k: [/html|css|sayt nece|veb ?sayt/], a: () => "Sadə HTML səhifə:\n```html\n<!DOCTYPE html>\n<html>\n<body>\n  <h1>Salam</h1>\n  <button onclick=\"alert('Salam!')\">Bas</button>\n</body>\n</html>\n```\nGitHub Pages-də `index.html` faylını repoya yüklə, sayt işləyəcək." },
+            { k: [/github|pages|deploy|yerlesdir/], a: () => "GitHub Pages ilə yerləşdirmə:\n1. Faylı `index.html` adı ilə repoya yüklə\n2. **Settings → Pages** bölməsinə gir\n3. Branch olaraq `main`, qovluq olaraq `/root` seç\n4. Bir neçə dəqiqə sonra sayt `https://istifadeci.github.io/repo/` ünvanında açılacaq" },
+            { k: [/zarafat|joke|gulməli|gulmeli|lətifə|letife/], a: () => { const j = ["Proqramçı niyə qaranlıqdan qorxur? Çünki işıqda bug görünür. 🐛", "Luau-da indeks 0-dan başlayır? Xeyr, 1-dən. Təsadüfən 0 yazan hər kəs bir gün ağlayır. 😅", "Kod işləyir, amma niyə işlədiyini bilmirəm. Toxunma, dağılar! 🙏"]; return j[Math.floor(Math.random() * j.length)]; } },
+        ];
 
+        function scriptListAnswer() {
             try {
-                // 1-ci metod: Birbaşa Sürətli API Endpoint
-                const res = await fetch("https://text.pollinations.ai/", {
+                const names = stealScripts.map(s => "• " + s.name).join("\n");
+                return "Saytda olan scriptlər:\n" + names + "\n\nAxtarış xanasından ada görə tapa bilərsən.";
+            } catch (e) { return "Script siyahısı hazırda əlçatan deyil."; }
+        }
+
+        function tryMath(text) {
+            const m = text.replace(/,/g, ".").replace(/×/g, "*").replace(/÷/g, "/").replace(/\^/g, "**").match(/[\d(][\d\s+\-*/().%]*[\d)]/);
+            if (!m) return null;
+            const expr = m[0];
+            if (!/[+\-*/%]/.test(expr)) return null;
+            if (!/^[\d\s+\-*/().%]+$/.test(expr)) return null;
+            try {
+                const val = Function('"use strict"; return (' + expr + ")")();
+                if (typeof val === "number" && isFinite(val)) return `🧮 ${expr.trim()} = **${Math.round(val * 1e10) / 1e10}**`;
+            } catch (e) {}
+            return null;
+        }
+
+        function detectLang(name, code) {
+            const ext = (name.split(".").pop() || "").toLowerCase();
+            const map = { lua: "Luau/Lua", luau: "Luau/Lua", js: "JavaScript", py: "Python", html: "HTML", css: "CSS", json: "JSON", cpp: "C++", txt: "" };
+            if (map[ext]) return map[ext];
+            if (/\blocal\b|\bthen\b|\bend\b|game:GetService/.test(code)) return "Luau/Lua";
+            if (/\bdef \w+\(|import \w+|print\(/.test(code) && !/;\s*$/m.test(code)) return "Python";
+            if (/const |let |=>|console\./.test(code)) return "JavaScript";
+            return "naməlum";
+        }
+
+        function analyzeCode(name, code, question) {
+            const lang = detectLang(name, code);
+            const lines = code.split("\n").length;
+            const out = [`📄 **${name}** faylı analiz olundu`, `• Dil: **${lang || "mətn"}**`, `• Sətir sayı: **${lines}**, simvol: **${code.length}**`];
+            const fnRe = /(?:function\s+([\w.:]+)\s*\(|local\s+function\s+(\w+)|def\s+(\w+)\s*\(|(?:const|let)\s+(\w+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|\w+)\s*=>)/g;
+            const fns = []; let m;
+            while ((m = fnRe.exec(code)) && fns.length < 15) fns.push(m[1] || m[2] || m[3] || m[4]);
+            if (fns.length) out.push("• Funksiyalar: " + fns.map(f => "`" + f + "`").join(", "));
+            const warns = [];
+            if (/loadstring/.test(code)) warns.push("`loadstring` var: uzaq kod işlədilir, mənbəyə etibar et");
+            if (/HttpGet|http[s]?:\/\//.test(code)) warns.push("Xarici link/HTTP sorğusu var");
+            if (/while true do(?![\s\S]{0,200}wait)/.test(code)) warns.push("`while true do` içində `task.wait()` görünmür, oyun donması riski var");
+            if (/\bwait\(/.test(code)) warns.push("`wait()` köhnədir, əvəzinə `task.wait()` işlət");
+            if (/eval\(|innerHTML\s*=/.test(code)) warns.push("`eval`/`innerHTML` təhlükəsizlik riski yarada bilər");
+            const open = (code.match(/[{(\[]/g) || []).length, close = (code.match(/[})\]]/g) || []).length;
+            if (open !== close) warns.push(`Mötərizələr bərabər deyil (açılan ${open}, bağlanan ${close})`);
+            if (/Luau/.test(lang)) {
+                const blocks = (code.match(/\b(function|do|then)\b/g) || []).length;
+                const ends = (code.match(/\bend\b/g) || []).length;
+                if (blocks > ends + 2 || ends > blocks + 2) warns.push(`\`end\` sayı şübhəlidir (blok ${blocks}, end ${ends})`);
+            }
+            out.push(warns.length ? "\n⚠️ **Qeydlər:**\n" + warns.map(w => "• " + w).join("\n") : "\n✅ Açıq-aşkar problem tapılmadı.");
+            if (question) out.push("\nSualın: \"" + question + "\". Kodun dərin izahı üçün onlayn AI bağlantısı lazımdır, hazırda əlçatan deyil.");
+            return out.join("\n");
+        }
+
+        function offlineAnswer(text, attachment) {
+            if (attachment && attachment.type === "file") return analyzeCode(attachment.name, attachment.content, text);
+            if (attachment && attachment.type === "image") return "🖼️ Şəkli aldım, amma şəklin içindəkini oxumaq üçün görüntü modeli lazımdır və o, API-siz brauzerdə mümkün deyil. Şəkildəki kodu/mətni yazıb göndərsən kömək edərəm.";
+
+            const n = norm(text).trim();
+            const math = tryMath(text);
+            if (math) return math;
+            if (/saat|vaxt|tarix|bu gun|time|date/.test(n) && n.length < 40) {
+                const d = new Date();
+                return "🕒 İndi: **" + d.toLocaleString("az-AZ") + "**";
+            }
+            if (/script(ler)?|hub|siyahi/.test(n) && /(hansi|var|siyahi|goster|list|nelər|neler)/.test(n)) return scriptListAnswer();
+
+            // Ən çox uyğunlaşan mövzunu seç
+            let best = null, bestScore = 0;
+            for (const item of KB) {
+                let score = 0;
+                for (const re of item.k) { const mm = n.match(re); if (mm) score += mm[0].length + 3; }
+                if (score > bestScore) { best = item; bestScore = score; }
+            }
+            if (best) return best.a();
+
+            return "Bu sualın dəqiq cavabı daxili bilik bazamda yoxdur. 🤔\n\nBelə suallara cavab verə bilirəm: Luau/Roblox (dəyişən, funksiya, dövr, table, RemoteEvent, DataStore, Tween, GUI), JS/Python əsasları, xəta izahı, riyazi hesab və fayl analizi.\n\nSualı bir az başqa cür yazıb yenidən cəhd et. Onlayn AI bağlantısı qurulanda hər mövzuda cavab verəcəm.";
+        }
+
+
+        const SYS_PROMPT = `Sən KROXY AI-san: güclü proqramlaşdırma köməkçisi və düşüncəli məsləhətçi.
+Qaydalar:
+- İstifadəçi hansı dildə yazırsa həmin dildə cavab ver (əsasən Azərbaycan dilində, səlis və təbii).
+- Cavab verməzdən əvvəl məsələni diqqətlə düşün: tələbi başa düş, addım-addım əsaslandır, sonra nəticəni ver. Səhv və ya yarımçıq cavab vermə.
+- Kodlama üzrə mütəxəssissən: Luau/Roblox Studio, JavaScript, Python, HTML/CSS, C++ və s. Kodu həmişə tam, işlək və markdown kod bloku (üç əks dırnaq ilə) daxilində ver, qısa izah əlavə et.
+- Xətaları tap, səbəbini izah et və düzəlişi göstər. Alternativ yolları müqayisə et.
+- Bilmədiyin şeyi uydurma, açıq de. Sual qeyri-dəqiqdirsə, ən yaxşı fərziyyə ilə cavab ver və nəyi fərz etdiyini qeyd et.
+- Faydalı, dərin və düşüncəli ol, lakin lazımsız uzatma.`;
+        const aiHistory = [];
+
+        function withTimeout(promise, ms) {
+            return Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+        }
+
+        let puterLoading = null;
+        function loadPuter() {
+            if (window.puter) return Promise.resolve();
+            if (puterLoading) return puterLoading;
+            puterLoading = new Promise((resolve, reject) => {
+                const sc = document.createElement("script");
+                sc.src = "https://js.puter.com/v2/";
+                sc.onload = resolve;
+                sc.onerror = () => { puterLoading = null; reject(new Error("js.puter.com skripti yüklənmədi (bloklanıb və ya əlçatmazdır)")); };
+                document.head.appendChild(sc);
+            });
+            return puterLoading;
+        }
+        loadPuter().catch(() => {});
+
+        function extractText(r) {
+            if (typeof r === "string") return r;
+            if (r && r.message && r.message.content !== undefined) {
+                const c = r.message.content;
+                return Array.isArray(c) ? c.map(x => x.text || "").join("") : String(c);
+            }
+            if (r && r.choices && r.choices[0] && r.choices[0].message) return r.choices[0].message.content;
+            if (r && typeof r.toString === "function" && r.toString() !== "[object Object]") return r.toString();
+            return "";
+        }
+
+        async function onlineAnswer(messages) {
+            // 1) Puter.js
+            try {
+                await withTimeout(loadPuter(), 25000);
+                // Güclüdən başlayaraq sınanır; model əlçatmazdırsa növbətisinə keçir
+                const MODELS = [
+                    "deepseek/deepseek-v4-pro",
+                    "openai/gpt-5.5",
+                    "z-ai/glm-5.3",
+                    "openai/gpt-5.4-mini",
+                    undefined
+                ];
+                for (const mdl of MODELS) {
+                    try {
+                        const r = await withTimeout(puter.ai.chat(messages, mdl ? { model: mdl } : {}), 120000);
+                        const t = extractText(r);
+                        if (t && t.trim()) { console.log("AI modeli:", mdl || "default"); return t; }
+                    } catch (e) {
+                        const msg = (e && (e.message || e.error || e.code)) || e;
+                        console.log("Puter model xətası (" + (mdl || "default") + "):", msg);
+                        // İstifadəçi giriş pəncərəsini bağladısa, təkrar-təkrar sınama
+                        if (/cancel|denied|auth|sign|login/i.test(String(msg) + String(e && e.code))) break;
+                    }
+                }
+            } catch (e) { console.warn("Puter yüklənmədi. Səbəb:", e && e.message ? e.message : e, "| online:", navigator.onLine, "| səhifə:", location.href); }
+
+            // 2) Ehtiyat endpoint
+            try {
+                const res = await withTimeout(fetch("https://text.pollinations.ai/openai", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        messages: [
-                            { role: "system", content: sysPrompt },
-                            { role: "user", content: fullPrompt }
-                        ]
-                    })
-                });
-
+                    body: JSON.stringify({ model: "openai", messages: messages })
+                }), 15000);
                 if (res.ok) {
-                    const text = await res.text();
-                    if (text && text.trim().length > 0) return text;
+                    const t = extractText(await res.json());
+                    if (t && t.trim()) return t;
                 }
-            } catch (err) {
-                console.log("Alt API sınanılır...");
+            } catch (e) { console.warn("Ehtiyat endpoint alınmadı. Səbəb:", e && e.name, e && e.message); }
+            return null;
+        }
+
+        async function generateRealAiResponse(promptText, attachment) {
+            const low = promptText.toLowerCase();
+            if (low.startsWith("/imagine") || low.includes("şəkil yarat")) {
+                let clean = promptText.replace(/şəkil yarat/gi, "").replace(/\/imagine/gi, "").trim() || "cyberpunk neon robot";
+                const img = `https://image.pollinations.ai/prompt/${encodeURIComponent(clean)}?width=800&height=500&nologo=true`;
+                return `🎨 <b>Yaradılan Şəkil: "${escHtml(clean)}"</b><br><img class="ai-gen-img" src="${img}" onerror="this.outerHTML='⚠️ Şəkil xidməti hazırda cavab vermir.'">`;
             }
 
-            try {
-                // 2-ci ehtiyat metod: GET Fallback
-                const url = `https://text.pollinations.ai/${encodeURIComponent(sysPrompt + "\n" + fullPrompt)}`;
-                const res2 = await fetch(url);
-                if (res2.ok) {
-                    const text2 = await res2.text();
-                    if (text2 && text2.trim().length > 0) return text2;
-                }
-            } catch (err2) {
-                console.log("GET xətası");
+            let fullPrompt = promptText || "Bu faylı izah et.";
+            if (attachment) {
+                if (attachment.type === "file") fullPrompt += `\n\n[Fayl Məzmunu - ${attachment.name}]:\n${attachment.content.slice(0, 20000)}`;
+                else if (attachment.type === "image") fullPrompt += `\n\n[İstifadəçi Şəkil Əlavə Etdi: ${attachment.name}]`;
             }
 
-            return "⚠️ Bağlantı xətası yarandı, xahiş olunur bir daha cəhd edin.";
+            aiHistory.push({ role: "user", content: fullPrompt });
+            const messages = [{ role: "system", content: SYS_PROMPT }, ...aiHistory.slice(-12)];
+            const online = await onlineAnswer(messages);
+            if (online) {
+                aiHistory.push({ role: "assistant", content: online });
+                return formatAiText(online);
+            }
+            aiHistory.pop();
+            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">⚠️ Onlayn AI qoşulmadı, daxili rejimdə cavab verildi. Səhifəni github.io ünvanından aç və Puter icazəsini ver.</span>';
         }
 
         function handleAiKeyDown(e) {
@@ -980,7 +1189,7 @@
 
             const response = await generateRealAiResponse(query, currentAttachment);
             botDiv.classList.remove('ai-msg-thinking');
-            botDiv.innerHTML = response.replace(/\n/g, '<br>');
+            botDiv.innerHTML = response;
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
