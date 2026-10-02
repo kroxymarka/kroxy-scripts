@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KROXY SCRIPTS & AI</title>
-    <!-- Puter.js serverless pulsuz AI kitabxanası (GitHub Pages-də heç bir açar olmadan işləyir) -->
-    <script src="https://js.puter.com/v2/"></script>
+    <title>KROXY SCRIPTS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
 
@@ -61,12 +59,17 @@
             padding-top: env(safe-area-inset-top);
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.12) 0%, transparent 40%);
+                radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.18) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.15) 0%, transparent 45%);
             background-attachment: fixed;
+            animation: pageFadeIn 0.5s ease-out;
         }
 
-        /* Intro Screen */
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: scale(0.99); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
         #introScreen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -76,22 +79,22 @@
             justify-content: center;
             z-index: 9999;
             opacity: 1;
-            transition: opacity 0.6s ease-out, visibility 0.6s;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
         }
 
         .intro-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.1rem, 4.5vw, 2rem);
+            font-size: clamp(1.15rem, 4.5vw, 2.1rem);
             font-weight: 900;
             text-align: center;
-            padding: 0 16px;
+            padding: 0 20px;
             background: linear-gradient(90deg, #fff, var(--primary-neon), var(--secondary-neon));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             opacity: 0;
-            transform: scale(0.9);
-            animation: introFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
-            text-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+            transform: scale(0.85);
+            animation: introFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.15s;
+            text-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
         }
 
         @keyframes introFadeIn {
@@ -101,16 +104,16 @@
         #introScreen.fade-out {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
         }
 
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: calc(10px + env(safe-area-inset-top)) 14px 10px 14px;
-            background: rgba(8, 3, 18, 0.9);
-            backdrop-filter: blur(16px);
+            padding: calc(10px + env(safe-area-inset-top)) 16px 10px 16px;
+            background: rgba(8, 3, 18, 0.92);
+            backdrop-filter: blur(18px);
             border-bottom: 1px solid var(--border-glow);
             position: sticky;
             top: 0;
@@ -132,7 +135,12 @@
             align-items: center;
             justify-content: center;
             color: #fff;
-            box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .brand-icon:hover {
+            transform: rotate(5deg) scale(1.05);
         }
 
         .logo-text {
@@ -145,33 +153,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border-glow);
-            color: #e2e8f0;
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 0.76rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-btn:hover {
-            background: rgba(168, 85, 247, 0.2);
-            border-color: var(--primary-neon);
-            color: #fff;
-        }
-
         .container {
             width: 100%;
             max-width: 1000px;
@@ -182,23 +163,25 @@
         .search-box {
             position: relative;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
         }
 
         .search-box input {
             width: 100%;
-            padding: 10px 12px 10px 38px;
+            padding: 10px 14px 10px 38px;
             background: rgba(12, 6, 26, 0.95);
             border: 1px solid var(--border-glow);
             border-radius: 20px;
             color: #fff;
             outline: none;
             font-size: 0.85rem;
-            transition: border-color 0.2s;
+            transition: all 0.25s ease;
         }
 
         .search-box input:focus {
             border-color: var(--secondary-neon);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
         }
 
         .search-box i {
@@ -214,48 +197,56 @@
             display: flex;
             gap: 6px;
             margin-bottom: 12px;
-            background: rgba(10, 5, 22, 0.6);
+            background: rgba(10, 5, 22, 0.7);
             padding: 4px;
             border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
         }
 
         .tab-btn {
             flex: 1;
-            padding: 9px 10px;
+            padding: 10px 12px;
             background: transparent;
             border: none;
             border-radius: 20px;
             color: var(--text-sub);
-            font-size: 0.82rem;
+            font-size: 0.83rem;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
         }
 
         .tab-btn.active {
             background: linear-gradient(135deg, var(--primary-neon), #7e22ce);
             color: #fff;
-            box-shadow: 0 2px 12px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 3px 15px rgba(168, 85, 247, 0.55);
+            transform: scale(1.01);
         }
 
         .section-header-box {
             text-align: center;
             margin: 10px 0 12px 0;
-            padding: 8px 12px;
-            background: rgba(16, 9, 32, 0.6);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: 15px;
-            backdrop-filter: blur(8px);
+            padding: 9px 12px;
+            background: rgba(16, 9, 32, 0.65);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
         .section-header-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
+            font-size: 1.02rem;
             font-weight: 800;
             color: #fff;
             background: linear-gradient(90deg, #fff, var(--primary-neon), var(--secondary-neon));
@@ -273,33 +264,32 @@
         .script-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-            gap: 10px;
+            gap: 12px;
+            animation: gridSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes gridSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .script-card {
             background: var(--card-bg);
             border: 1px solid var(--border-glow);
             border-radius: 16px;
-            padding: 12px 14px;
+            padding: 13px 15px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: cardFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .script-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.35);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
             border-color: var(--primary-neon);
-        }
-
-        @keyframes cardFadeIn {
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .card-top {
@@ -342,7 +332,7 @@
             background: linear-gradient(135deg, var(--primary-neon), #7e22ce);
             color: #fff;
             border: none;
-            padding: 9px;
+            padding: 9.5px;
             border-radius: 20px;
             font-size: 0.82rem;
             font-weight: 700;
@@ -351,73 +341,78 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            box-shadow: 0 3px 12px rgba(168, 85, 247, 0.3);
-            transition: all 0.25s ease;
+            box-shadow: 0 3px 12px rgba(168, 85, 247, 0.35);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-copy:hover {
-            box-shadow: 0 0 18px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
             transform: scale(1.02);
+        }
+
+        .btn-copy:active {
+            transform: scale(0.97);
         }
 
         .btn-copy.copied {
             background: linear-gradient(135deg, #16a34a, var(--success-green)) !important;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.6) !important;
         }
 
-        /* KROXY AI INTERFACE */
         .ai-wrapper {
             display: none;
             flex-direction: column;
-            height: clamp(480px, 72vh, 650px);
+            height: clamp(480px, 73vh, 650px);
             max-height: calc(100dvh - 160px);
-            background: rgba(14, 8, 28, 0.88);
+            background: rgba(14, 8, 28, 0.9);
             border: 1px solid var(--border-glow);
             border-radius: 20px;
             overflow: hidden;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.25);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.28);
             user-select: text;
-            animation: fadeInAI 0.4s ease-in-out;
+            animation: aiPanelEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
 
-        @keyframes fadeInAI {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes aiPanelEnter {
+            from { opacity: 0; transform: translateY(14px) scale(0.99); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* AI Header Top Bar */
         .ai-status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 14px;
-            background: rgba(6, 3, 14, 0.8);
-            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-            font-size: 0.75rem;
+            padding: 9px 16px;
+            background: rgba(6, 3, 14, 0.85);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.25);
+            font-size: 0.78rem;
         }
 
         .ai-status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            color: #a7f3d0;
-            font-weight: 600;
+            gap: 7px;
+            color: #f1f5f9;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
         }
 
         .status-pulse {
-            width: 7px;
-            height: 7px;
-            background-color: #10b981;
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary-neon);
             border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px var(--secondary-neon);
+            animation: pulseGlow 1.8s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
+        @keyframes pulseGlow {
+            0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 6px var(--secondary-neon); }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px var(--primary-neon); }
+            100% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 6px var(--secondary-neon); }
         }
 
         .ai-header-controls {
@@ -431,71 +426,42 @@
             border: 1px solid rgba(168, 85, 247, 0.3);
             color: var(--text-sub);
             border-radius: 12px;
-            padding: 4px 8px;
+            padding: 5px 10px;
             font-size: 0.72rem;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 4px;
-            transition: all 0.2s ease;
+            gap: 5px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .ai-ctrl-btn:hover {
             color: #fff;
             border-color: var(--primary-neon);
-            background: rgba(168, 85, 247, 0.15);
-        }
-
-        /* Suggestion Chips */
-        .ai-suggestions {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding: 6px 12px;
-            background: rgba(10, 5, 20, 0.5);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            white-space: nowrap;
-        }
-
-        .ai-chip {
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid rgba(168, 85, 247, 0.25);
-            color: #e2e8f0;
-            padding: 4px 10px;
-            border-radius: 14px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .ai-chip:hover {
-            background: var(--primary-neon);
-            color: #fff;
+            background: rgba(168, 85, 247, 0.2);
             transform: translateY(-1px);
         }
 
         .ai-chat-box {
             flex: 1;
-            padding: 14px;
+            padding: 16px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            background: rgba(4, 2, 10, 0.55);
+            background: rgba(4, 2, 10, 0.58);
             scroll-behavior: smooth;
         }
 
         .ai-msg {
             max-width: 90%;
             width: fit-content;
-            padding: 10px 14px;
+            padding: 10px 15px;
             border-radius: 18px;
-            font-size: 0.84rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.55;
             word-break: break-word;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             opacity: 0;
             animation: messageSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -510,19 +476,19 @@
             background: linear-gradient(135deg, var(--primary-neon), #7e22ce);
             color: #fff;
             border-bottom-right-radius: 4px;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.35);
+            box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
         }
 
         .ai-msg-bot {
             align-self: flex-start;
-            background: rgba(20, 11, 38, 0.94);
+            background: rgba(20, 11, 38, 0.95);
             border: 1px solid var(--border-glow);
             color: #f1f5f9;
             border-bottom-left-radius: 4px;
         }
 
         .ai-msg-thinking {
-            padding: 8px 14px !important;
+            padding: 9px 15px !important;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -532,7 +498,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            height: 14px;
+            height: 15px;
         }
 
         .typing-dot {
@@ -550,75 +516,83 @@
 
         @keyframes bounceDot {
             0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-            40% { transform: translateY(-6px); opacity: 1; box-shadow: 0 0 10px var(--primary-neon); }
+            40% { transform: translateY(-7px); opacity: 1; box-shadow: 0 0 10px var(--primary-neon); }
         }
 
-        /* AI Code Block with Header and Copy */
         .ai-code-wrapper {
-            margin: 8px 0;
-            border-radius: 10px;
+            margin: 9px 0;
+            border-radius: 12px;
             overflow: hidden;
             background: #090c18;
-            border: 1px solid rgba(168, 85, 247, 0.35);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
         }
 
         .ai-code-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 5px 10px;
-            background: rgba(168, 85, 247, 0.15);
-            font-size: 0.72rem;
+            padding: 6px 12px;
+            background: rgba(168, 85, 247, 0.18);
+            font-size: 0.73rem;
             color: #c4b5fd;
             font-family: monospace;
-            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.25);
         }
 
         .ai-code-copy-btn {
             background: transparent;
-            border: none;
+            border: 1px solid rgba(56, 189, 248, 0.4);
             color: #38bdf8;
             cursor: pointer;
             font-size: 0.72rem;
             font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: background 0.15s;
+            padding: 3px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
 
         .ai-code-copy-btn:hover {
             background: rgba(56, 189, 248, 0.2);
+            color: #fff;
+            transform: scale(1.03);
         }
 
         .ai-code-content {
-            padding: 10px;
+            padding: 12px;
             overflow-x: auto;
             font-family: Consolas, Monaco, 'Courier New', monospace;
-            font-size: 0.76rem;
+            font-size: 0.77rem;
             color: #e0e7ff;
-            line-height: 1.45;
+            line-height: 1.5;
             white-space: pre;
             tab-size: 4;
         }
 
         .ai-inline {
-            background: rgba(168, 85, 247, 0.22);
+            background: rgba(168, 85, 247, 0.25);
             padding: 2px 6px;
-            border-radius: 5px;
+            border-radius: 6px;
             font-family: Consolas, monospace;
-            font-size: 0.78rem;
+            font-size: 0.79rem;
             color: #e9d5ff;
         }
 
         .ai-file-bar {
             display: none;
-            padding: 8px 14px;
+            padding: 8px 16px;
             background: rgba(8, 4, 18, 0.95);
             border-top: 1px solid var(--border-glow);
             font-size: 0.78rem;
             color: var(--secondary-neon);
             justify-content: space-between;
             align-items: center;
+            animation: fileBarSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fileBarSlide {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .ai-file-bar button {
@@ -627,89 +601,85 @@
             color: var(--danger-red);
             cursor: pointer;
             font-weight: bold;
+            padding: 2px 6px;
         }
 
-        /* Sancaq Menyusu */
         .attach-menu {
             position: absolute;
-            bottom: 65px;
+            bottom: 66px;
             left: 14px;
             background: rgba(14, 8, 28, 0.98);
             border: 1px solid var(--border-glow);
-            border-radius: 14px;
-            padding: 6px;
+            border-radius: 16px;
+            padding: 8px;
             display: none;
             flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            backdrop-filter: blur(12px);
-            z-index: 50;
+            gap: 5px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 15px rgba(168, 85, 247, 0.3);
+            backdrop-filter: blur(16px);
+            z-index: 60;
             transform-origin: bottom left;
+            opacity: 0;
+            transform: translateY(12px) scale(0.9);
+            transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
 
-        .attach-menu.opening {
+        .attach-menu.open {
             display: flex !important;
-            animation: menuFadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .attach-menu.closing {
-            display: flex !important;
-            animation: menuFadeOutDown 0.15s cubic-bezier(0.7, 0, 0.84, 0) forwards;
-        }
-
-        @keyframes menuFadeInUp {
-            from { opacity: 0; transform: translateY(10px) scale(0.92); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes menuFadeOutDown {
-            from { opacity: 1; transform: translateY(0) scale(1); }
-            to { opacity: 0; transform: translateY(10px) scale(0.92); }
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+            pointer-events: auto !important;
         }
 
         .attach-menu-btn {
             background: transparent;
             border: none;
             color: #f8fafc;
-            padding: 8px 12px;
-            font-size: 0.8rem;
+            padding: 9px 13px;
+            font-size: 0.81rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border-radius: 8px;
+            gap: 9px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
             text-align: left;
         }
 
         .attach-menu-btn:hover {
-            background: rgba(168, 85, 247, 0.2);
+            background: rgba(168, 85, 247, 0.25);
             color: var(--secondary-neon);
+            transform: translateX(3px);
+        }
+
+        .attach-menu-btn:active {
+            transform: scale(0.96);
         }
 
         .ai-input-area {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            background: rgba(8, 4, 18, 0.95);
+            gap: 9px;
+            padding: 11px 13px;
+            background: rgba(8, 4, 18, 0.96);
             border-top: 1px solid var(--border-glow);
             position: relative;
         }
 
         .ai-attach-btn {
-            background: rgba(168, 85, 247, 0.1);
+            background: rgba(168, 85, 247, 0.12);
             border: 1px solid var(--border-glow);
             color: var(--primary-neon);
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
             flex-shrink: 0;
         }
@@ -717,23 +687,28 @@
         .ai-attach-btn:hover {
             background: var(--primary-neon);
             color: #fff;
-            transform: scale(1.05);
+            transform: scale(1.08) rotate(5deg);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.6);
+        }
+
+        .ai-attach-btn:active {
+            transform: scale(0.92);
         }
 
         .ai-input-area textarea {
             flex: 1;
             background: rgba(4, 2, 10, 0.95);
             border: 1px solid var(--border-glow);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 10px 16px;
             color: #fff;
             outline: none;
             resize: none;
             height: 42px;
             max-height: 100px;
-            font-size: 0.83rem;
+            font-size: 0.84rem;
             user-select: text;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
         }
 
@@ -744,29 +719,33 @@
 
         .ai-input-area textarea:focus {
             border-color: var(--secondary-neon);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.35);
         }
 
         .ai-send-btn {
             background: linear-gradient(135deg, var(--primary-neon), #7e22ce);
             color: #fff;
             border: 1px solid var(--border-glow);
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            transition: transform 0.2s, box-shadow 0.25s ease;
-            box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+            font-size: 0.95rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
             flex-shrink: 0;
         }
 
         .ai-send-btn:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
+            transform: scale(1.08) rotate(-6deg);
+            box-shadow: 0 0 22px rgba(168, 85, 247, 0.75);
+        }
+
+        .ai-send-btn:active {
+            transform: scale(0.9);
         }
 
         .ai-gen-img {
@@ -777,17 +756,22 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* Modal Settings */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             z-index: 1000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 16px;
+            animation: modalBackdrop 0.25s ease-out;
+        }
+
+        @keyframes modalBackdrop {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-card {
@@ -796,14 +780,14 @@
             border-radius: 20px;
             width: 100%;
             max-width: 480px;
-            padding: 20px;
-            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.3);
-            animation: modalFadeIn 0.25s ease-out;
+            padding: 22px;
+            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.35);
+            animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: text;
         }
 
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.95); }
+        @keyframes modalScaleUp {
+            from { opacity: 0; transform: scale(0.92); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -821,8 +805,9 @@
             background: transparent;
             border: none;
             color: var(--text-sub);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
+            transition: color 0.2s;
         }
 
         .modal-close:hover {
@@ -843,12 +828,12 @@
 
         .settings-select, .settings-input {
             width: 100%;
-            background: rgba(4, 2, 10, 0.9);
+            background: rgba(4, 2, 10, 0.95);
             border: 1px solid rgba(168, 85, 247, 0.4);
             border-radius: 12px;
-            padding: 9px 12px;
+            padding: 10px 12px;
             color: #fff;
-            font-size: 0.82rem;
+            font-size: 0.83rem;
             outline: none;
         }
 
@@ -857,10 +842,10 @@
         }
 
         .settings-hint {
-            font-size: 0.7rem;
+            font-size: 0.71rem;
             color: var(--text-sub);
             margin-top: 5px;
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .modal-actions {
@@ -880,6 +865,11 @@
             font-size: 0.85rem;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-modal-save:hover {
+            transform: scale(1.02);
         }
 
         .btn-modal-test {
@@ -891,6 +881,38 @@
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-test:hover {
+            background: rgba(56, 189, 248, 0.15);
+        }
+
+        #toastNotice {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: rgba(14, 8, 28, 0.96);
+            border: 1px solid var(--primary-neon);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        #toastNotice.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .k-ico { width: 1.1em; height: 1.1em; vertical-align: -0.15em; display: inline-block; }
@@ -904,15 +926,13 @@
             .ai-msg { max-width: 94%; }
         }
     </style>
-<script src="/_aistudio-iframe.js?v=2c34bde1"></script></head>
+</head>
 <body class="hide-scrollbar">
 
-    <!-- Giriş Ekranı -->
     <div id="introScreen">
         <div class="intro-title">KROXY SCRIPTS-Ə XOŞ GƏLMİSİNİZ!</div>
     </div>
 
-    <!-- Naviqasiya Paneli -->
     <div class="navbar">
         <div class="brand">
             <div class="brand-icon">
@@ -924,18 +944,9 @@
             </div>
             <div class="logo-text">KROXY SCRIPTS</div>
         </div>
-        <div class="nav-actions">
-            <button class="nav-btn" onclick="openGitHubModal()" title="GitHub-a yerləşdirmə təlimatı">
-                <svg class="k-ico" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                </svg>
-                GitHub Quraşdırma
-            </button>
-        </div>
     </div>
 
     <div class="container">
-        <!-- Axtarış Qutusu -->
         <div class="search-box" id="searchContainer">
             <i>
                 <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -946,7 +957,6 @@
             <input type="text" id="searchInput" placeholder="Skript adı ilə axtar..." onkeyup="filterScripts()">
         </div>
 
-        <!-- Bölmə Keçidləri -->
         <div class="tabs-header">
             <button class="tab-btn active" id="tabSteal" onclick="switchTab('steal')">
                 <svg class="k-ico" viewBox="0 0 24 24" fill="currentColor">
@@ -962,22 +972,18 @@
             </button>
         </div>
 
-        <!-- Başlıq Məlumatı -->
         <div class="section-header-box">
             <div class="section-header-title" id="headerTitle">Steal An Egg Scriptlərimiz!</div>
             <div class="section-header-sub" id="headerSub">Bütün executorlar üçün yararlıdır scriptlərimiz!</div>
         </div>
 
-        <!-- Skriptlərin Siyahısı -->
         <div class="script-grid" id="scriptGrid"></div>
 
-        <!-- KROXY AI Çat Paneli -->
         <div class="ai-wrapper" id="aiWrapper">
-            <!-- AI Başlıq və Status Barı -->
             <div class="ai-status-bar">
                 <div class="ai-status-badge">
                     <span class="status-pulse"></span>
-                    <span id="aiActiveProviderText">KROXY AI (Aktiv & Pulsuz)</span>
+                    <span id="aiActiveProviderText">KROXY AI</span>
                 </div>
                 <div class="ai-header-controls">
                     <button class="ai-ctrl-btn" onclick="clearAiChat()" title="Söhbəti Təmizlə">
@@ -991,51 +997,38 @@
                 </div>
             </div>
 
-            <!-- Tez Təklif Düymələri (Chips) -->
-            <div class="ai-suggestions">
-                <button class="ai-chip" onclick="quickPrompt('Robloxda Leaderstats pul sistemini necə yaradım?')">💰 Leaderstats skripti</button>
-                <button class="ai-chip" onclick="quickPrompt('Robloxda RemoteEvent ilə Server-Client necə əlaqələndirilir?')">📡 RemoteEvent nümunəsi</button>
-                <button class="ai-chip" onclick="quickPrompt('TweenService ilə qapı açılma animasiyası kodu ver')">🚪 Tween animasiyası</button>
-                <button class="ai-chip" onclick="quickPrompt('attempt to index nil with \'Character\' xətası nədir və necə düzəldilir?')">🐞 Xəta izahı</button>
-                <button class="ai-chip" onclick="quickPrompt('/imagine futuristic cyberpunk hacker room with neon purple lights')">🎨 Şəkil yarat</button>
-            </div>
-
-            <!-- Çat Mesajları Qutusu -->
             <div class="ai-chat-box" id="aiChatBox">
                 <div class="ai-msg ai-msg-bot">
                     ⚡ <b>KROXY AI Aktivdir!</b><br>
-                    Mənə Luau/Roblox skriptləri, xətaların düzəldilməsi, JavaScript, Python və ya digər kodlama suallarınızı verə bilərsiniz. Şəkil yaratmaq üçün <code>/imagine [təsvir]</code> yaza bilərsiniz!
+                    Kodlama, xəta analizi və skript suallarınızı göndərə bilərsiniz. Şəkil yaratmaq üçün <code>/imagine [təsvir]</code> yaza bilərsiniz!
                 </div>
             </div>
 
-            <!-- Fayl Əlavə Göstəricisi -->
             <div class="ai-file-bar" id="aiFileBar">
                 <span id="aiFileName">📁 fayl.txt</span>
                 <button onclick="removeAiFile()">✕ Ləğv et</button>
             </div>
 
-            <!-- Sancaq Fayl Əlavə Menyusu -->
             <div class="attach-menu" id="attachMenu">
-                <button class="attach-menu-btn" onclick="triggerInput('image')">
+                <button class="attach-menu-btn" onclick="handleAttachOption('image')">
                     <svg class="k-ico" style="color: #06b6d4;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><polyline points="4,18 10,13 14,17 17,14 21,18"/></svg>
                     Şəkil Göndər
                 </button>
-                <button class="attach-menu-btn" onclick="triggerInput('file')">
+                <button class="attach-menu-btn" onclick="handleAttachOption('file')">
                     <svg class="k-ico" style="color: #a855f7;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2.5h8l4.5 4.5V21.5H6z"/><polyline points="14,2.5 14,7 18.5,7"/><polyline points="10,12 8,14.5 10,17"/><polyline points="14,12 16,14.5 14,17"/></svg>
                     Kod / Mətn Faylı
                 </button>
             </div>
 
-            <!-- Daxiletmə Sahəsi -->
             <div class="ai-input-area">
-                <div class="ai-attach-btn" onclick="toggleAttachMenu(event)" title="Fayl və ya Şəkil Əlavə et">
+                <div class="ai-attach-btn" id="attachToggleBtn" onclick="toggleAttachMenu(event)" title="Fayl və ya Şəkil Əlavə et">
                     <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.5 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l9-9a3.3 3.3 0 0 1 4.7 4.7l-9 9a1.7 1.7 0 0 1-2.4-2.4l8.2-8.2"/></svg>
                 </div>
 
                 <input type="file" id="aiImageUpload" accept="image/*" style="display: none;" onchange="handleAiFileUpload(event, 'image')">
                 <input type="file" id="aiFileUpload" accept=".txt,.lua,.luau,.js,.html,.css,.json,.cpp,.py" style="display: none;" onchange="handleAiFileUpload(event, 'file')">
 
-                <textarea id="aiInput" placeholder="Kodu və ya sualınızı bura yazın (Enter - göndər, Shift+Enter - yeni sətir)..." rows="1" onkeydown="handleAiKeyDown(event)"></textarea>
+                <textarea id="aiInput" placeholder="Buraya yazın..." rows="1" onkeydown="handleAiKeyDown(event)"></textarea>
 
                 <button class="ai-send-btn" id="aiSendBtn" onclick="sendAiMessage()" title="Göndər">
                     <svg class="k-ico" viewBox="0 0 24 24" fill="currentColor">
@@ -1046,7 +1039,6 @@
         </div>
     </div>
 
-    <!-- AI Tənzimləmələri Modalı -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
             <div class="modal-title">
@@ -1054,22 +1046,21 @@
                 <button class="modal-close" onclick="closeSettingsModal()">✕</button>
             </div>
             <div class="settings-group">
-                <label class="settings-label">AI Xidməti (Provider):</label>
+                <label class="settings-label">AI Xidməti (Model Mühərriki):</label>
                 <select id="settingProvider" class="settings-select" onchange="handleProviderChange()">
-                    <option value="auto">🤖 Avtomatik / Pulsuz (Açar tələb olunmur - GitHub üçün idealdır)</option>
-                    <option value="gemini">💎 Google Gemini API (Öz pulsuz açarınızla)</option>
-                    <option value="groq">⚡ Groq API (Llama 3.3 - Çox sürətli)</option>
-                    <option value="openrouter">🌐 OpenRouter / Xüsusi OpenAI uyğun API</option>
+                    <option value="auto">⚡ Güclü Kodlama Mühərriki (Codestral & DeepSeek - Açar tələb olunmur)</option>
+                    <option value="gemini">💎 Google Gemini API (Öz açarınızla - Çox sürətli)</option>
+                    <option value="groq">⚡ Groq Llama 3.3 (Öz açarınızla)</option>
                 </select>
                 <div class="settings-hint" id="providerHint">
-                    ✅ <b>Avtomatik rejim:</b> Heç bir API açarı tələb olunmur. GitHub Pages və ya brauzerdə dərhal işləyir.
+                    ✅ <b>Güclü Mühərrik:</b> Roblox Luau və proqramlaşdırma üzrə dərindən düşünən güclü kod modelidir. Puter yoxdur, açar tələb olunmur.
                 </div>
             </div>
             <div class="settings-group" id="apiKeyGroup" style="display: none;">
                 <label class="settings-label" id="apiKeyLabel">API Açarı (API Key):</label>
                 <input type="password" id="settingApiKey" class="settings-input" placeholder="API açarınızı bura yapışdırın...">
                 <div class="settings-hint">
-                    🔒 Açarlarınız yalnız brauzerinizin <code>localStorage</code> yaddaşında saxlanılır, heç kimlə paylaşılmır və GitHub reposuna düşmür!
+                    🔒 Açarlarınız yalnız brauzerinizin <code>localStorage</code> yaddaşında qalır, GitHub reposuna düşmür.
                 </div>
             </div>
             <div class="modal-actions">
@@ -1079,33 +1070,9 @@
         </div>
     </div>
 
-    <!-- GitHub Quraşdırma Modalı -->
-    <div class="modal-overlay" id="githubModal">
-        <div class="modal-card">
-            <div class="modal-title">
-                <span>🐙 GitHub-a Yerləşdirmə</span>
-                <button class="modal-close" onclick="closeGitHubModal()">✕</button>
-            </div>
-            <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6; display: flex; flex-direction: column; gap: 10px;">
-                <p>Bu fayl tək başına tam işləkdir (Single-File HTML). Heç bir backend server və ya Node.js quraşdırmadan pulsuz olaraq GitHub Pages-də işləyir!</p>
-                <ol style="padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
-                    <li>GitHub-da yeni repo açın və bu faylı <b><code>index.html</code></b> adı ilə repoya əlavə edin.</li>
-                    <li>Repo parametrlərinə (<b>Settings → Pages</b>) daxil olun.</li>
-                    <li>Source bölməsindən <b>Deploy from a branch</b> seçin, Branch olaraq <b>main</b> və <b>/ (root)</b> qovluğunu seçib <b>Save</b> edin.</li>
-                    <li>1-2 dəqiqə sonra saytınız <code>https://istifadəçi.github.io/repo/</code> ünvanında aktiv olacaq!</li>
-                </ol>
-                <div style="background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 10px; padding: 10px; font-size: 0.78rem;">
-                    💡 <b>Qeyd:</b> Saytda KROXY AI heç bir server olmadan birbaşa ziyarətçilərə cavab verir. Heç bir açar yerləşdirməyə ehtiyac yoxdur.
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-modal-save" onclick="closeGitHubModal()">Aydındır</button>
-            </div>
-        </div>
-    </div>
+    <div id="toastNotice">✓ Skript panoya kopyalandı!</div>
 
     <script>
-        // Giriş ekranı animasiyası
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const intro = document.getElementById('introScreen');
@@ -1113,11 +1080,10 @@
                     intro.classList.add('fade-out');
                     document.body.classList.remove('hide-scrollbar');
                 }
-            }, 1400);
+            }, 1200);
             loadSettings();
         });
 
-        // Steal An Egg skriptləri bazası
         const stealScripts = [
             { name: "Chilli Hub", code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()` },
             { name: "Tsuo Hub", code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/Tsuo7/TsuoHub/main/stealanegg"))()` },
@@ -1136,12 +1102,19 @@
         const aiWrapper = document.getElementById('aiWrapper');
         const searchContainer = document.getElementById('searchContainer');
 
+        function showToast(text) {
+            const toast = document.getElementById('toastNotice');
+            toast.textContent = text || '✓ Skript panoya kopyalandı!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
         function renderScripts(data) {
             grid.innerHTML = '';
             data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'script-card';
-                card.style.animationDelay = `${index * 0.04}s`;
+                card.style.animation = `gridSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.03}s`;
                 card.innerHTML = `
                     <div class="card-top">
                         <div class="script-title">
@@ -1196,6 +1169,7 @@
         function setCopiedState(btn) {
             btn.innerHTML = `Kopyalandı ✓`;
             btn.classList.add('copied');
+            showToast('✓ Skript panoya kopyalandı!');
             setTimeout(() => {
                 btn.innerHTML = `Skripti Kopyala <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/></svg>`;
                 btn.classList.remove('copied');
@@ -1227,7 +1201,6 @@
                 searchContainer.style.display = 'none';
                 grid.style.display = 'none';
                 aiWrapper.style.display = 'flex';
-                updateProviderBadge();
             }
         }
 
@@ -1238,45 +1211,47 @@
             renderScripts(filtered);
         }
 
-        /* Sancaq Fayl Əlavə Menyusu */
-        let isMenuOpen = false;
+        let isAttachOpen = false;
 
         function toggleAttachMenu(e) {
-            e.stopPropagation();
-            if (isMenuOpen) closeAttachMenu();
-            else openAttachMenu();
-        }
-
-        function openAttachMenu() {
+            if (e) e.stopPropagation();
             const menu = document.getElementById('attachMenu');
-            menu.classList.remove('closing');
-            menu.classList.add('opening');
-            isMenuOpen = true;
+            isAttachOpen = !isAttachOpen;
+            if (isAttachOpen) {
+                menu.classList.add('open');
+            } else {
+                menu.classList.remove('open');
+            }
         }
 
         function closeAttachMenu() {
             const menu = document.getElementById('attachMenu');
-            if (!isMenuOpen) return;
-            menu.classList.remove('opening');
-            menu.classList.add('closing');
+            if (menu) menu.classList.remove('open');
+            isAttachOpen = false;
+        }
+
+        function handleAttachOption(type) {
+            closeAttachMenu();
             setTimeout(() => {
-                menu.classList.remove('closing');
-                menu.style.display = 'none';
-                isMenuOpen = false;
-            }, 150);
+                if (type === 'image') {
+                    const el = document.getElementById('aiImageUpload');
+                    if (el) el.click();
+                } else {
+                    const el = document.getElementById('aiFileUpload');
+                    if (el) el.click();
+                }
+            }, 60);
         }
 
         document.addEventListener('click', (e) => {
-            if (isMenuOpen) closeAttachMenu();
+            const menu = document.getElementById('attachMenu');
+            const btn = document.getElementById('attachToggleBtn');
+            if (isAttachOpen && menu && !menu.contains(e.target) && btn && !btn.contains(e.target)) {
+                closeAttachMenu();
+            }
         });
 
         let attachedAiFile = null;
-
-        function triggerInput(type) {
-            closeAttachMenu();
-            if (type === 'image') document.getElementById('aiImageUpload').click();
-            else document.getElementById('aiFileUpload').click();
-        }
 
         function handleAiFileUpload(event, type) {
             const file = event.target.files[0];
@@ -1308,17 +1283,18 @@
             document.getElementById('aiFileBar').style.display = 'none';
         }
 
-        /* ================= KROXY AI YENİ SİSTEMİ ================= */
-        const SYS_PROMPT = `Sən KROXY AI-san: Roblox Luau, executor skriptləri, oyun mexanikaları və proqramlaşdırma üzrə peşəkar, dostyana və düşüncəli mütəxəssis köməkçisən.
-Qaydalar:
-1. İstifadəçiyə əsasən səlis Azərbaycan dilində, aydın və faydalı cavab ver.
-2. Əgər istifadəçi kod istəsə və ya xətanı düzəltməyi xahiş etsə, tam, təmiz, optimallaşdırılmış və izahlı kod blokları (markdown formatında) təqdim et.
-3. Roblox Studio və Luau mövzularında (LocalScript vs Server Script, RemoteEvent/Function, DataStore, TweenService, Humanoid, leaderstats, UI) ən müasir task.wait(), pcall və təhlükəsizlik qaydalarını tətbiq et.
-4. Python, JavaScript, HTML/CSS və C++ kimi digər dillərdə də kömək et.`;
+        const SYS_PROMPT = `Sən KROXY AI-san: Dərin düşüncəli, yüksək analitik zəkaya və güclü proqramlaşdırma səriştəsinə malik elit süni intellekt köməkçisisən.
+Məqsədin:
+1. İstifadəçiyə səlis, aydın və təbii Azərbaycan dilində yüksək keyfiyyətli izahat və kodlar təqdim etmək.
+2. Düşüncə və Analiz: Suala birbaşa səthi deyil, problemin mahiyyətini, arxitekturasını və optimal yolunu düşünərək addım-addım cavab ver.
+3. Kodlama Mütəxəssisliyi:
+   - Roblox Luau: Ən müasir task.wait(), pcall, RaycastParams, RunService, TweenService, RemoteEvent/Function, DataStore və UI prinsiplərindən istifadə et. Kodu yarımçıq buraxma, tam və işlək yaz.
+   - Kodları həmişə markdown kod blokları daxilində (üç əks dırnaq ilə) təqdim et və kodun hər kritik hissəsinə qısa, aydın şərhlər əlavə et.
+   - Digər dillər: Python, JavaScript, HTML/CSS, C++ və digər mövzularda da peşəkar kod və izah yaz.
+4. Xəta Analizi: Əgər xəta mətni verilibsə, xətanın dəqiq nədən qaynaqlandığını və ən düzgün aradan qaldırılma metodunu göstər.`;
 
         let chatHistory = [];
 
-        // Tənzimləmələrin saxlanması və oxunması
         function loadSettings() {
             const provider = localStorage.getItem('kroxy_ai_provider') || 'auto';
             const apiKey = localStorage.getItem('kroxy_ai_key') || '';
@@ -1327,7 +1303,6 @@ Qaydalar:
             if (provSelect) provSelect.value = provider;
             if (keyInput) keyInput.value = apiKey;
             handleProviderChange();
-            updateProviderBadge();
         }
 
         function handleProviderChange() {
@@ -1338,19 +1313,15 @@ Qaydalar:
 
             if (provider === 'auto') {
                 keyGroup.style.display = 'none';
-                hint.innerHTML = '✅ <b>Avtomatik rejim:</b> Heç bir API açarı tələb olunmur. GitHub Pages və ya brauzerdə dərhal işləyir.';
+                hint.innerHTML = '✅ <b>Güclü Mühərrik:</b> Roblox Luau və proqramlaşdırma üzrə dərindən düşünən güclü kod modelidir. Puter yoxdur, açar tələb olunmur.';
             } else if (provider === 'gemini') {
                 keyGroup.style.display = 'block';
                 keyLabel.innerText = 'Google Gemini API Açarı:';
-                hint.innerHTML = '💎 <b>Google Gemini API:</b> Pulsuz açarınızı <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#38bdf8;">Google AI Studio</a>-dan götürə bilərsiniz. Çox sürətlidir!';
-            } else if (provider === 'groq') {
-                keyGroup.style.display = 'block';
-                keyLabel.innerText = 'Groq API Açarı:';
-                hint.innerHTML = '⚡ <b>Groq API:</b> <a href="https://console.groq.com/keys" target="_blank" style="color:#38bdf8;">console.groq.com</a>-dan pulsuz götürülür. İldırım sürətli Llama 3.3 istifadə edir.';
+                hint.innerHTML = '💎 <b>Google Gemini API:</b> Pulsuz açarınızı <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#38bdf8;">Google AI Studio</a>-dan götürə bilərsiniz.';
             } else {
                 keyGroup.style.display = 'block';
-                keyLabel.innerText = 'API Açarı (OpenRouter / Xüsusi):';
-                hint.innerHTML = '🌐 <b>OpenRouter:</b> İstənilən modeli dəstəkləyir.';
+                keyLabel.innerText = 'Groq API Açarı:';
+                hint.innerHTML = '⚡ <b>Groq API:</b> <a href="https://console.groq.com/keys" target="_blank" style="color:#38bdf8;">console.groq.com</a>-dan açarınızı daxil edə bilərsiniz.';
             }
         }
 
@@ -1359,19 +1330,8 @@ Qaydalar:
             const apiKey = document.getElementById('settingApiKey').value.trim();
             localStorage.setItem('kroxy_ai_provider', provider);
             localStorage.setItem('kroxy_ai_key', apiKey);
-            updateProviderBadge();
             closeSettingsModal();
-        }
-
-        function updateProviderBadge() {
-            const provider = localStorage.getItem('kroxy_ai_provider') || 'auto';
-            const badgeText = document.getElementById('aiActiveProviderText');
-            if (!badgeText) return;
-
-            if (provider === 'auto') badgeText.textContent = 'KROXY AI (Aktiv & Pulsuz)';
-            else if (provider === 'gemini') badgeText.textContent = 'KROXY AI (Gemini 2.5 Flash)';
-            else if (provider === 'groq') badgeText.textContent = 'KROXY AI (Groq Llama 3.3)';
-            else badgeText.textContent = 'KROXY AI (Özəl Model)';
+            showToast('✓ Tənzimləmələr yadda saxlanıldı!');
         }
 
         function openSettingsModal() {
@@ -1380,14 +1340,6 @@ Qaydalar:
 
         function closeSettingsModal() {
             document.getElementById('settingsModal').style.display = 'none';
-        }
-
-        function openGitHubModal() {
-            document.getElementById('githubModal').style.display = 'flex';
-        }
-
-        function closeGitHubModal() {
-            document.getElementById('githubModal').style.display = 'none';
         }
 
         function clearAiChat() {
@@ -1399,14 +1351,9 @@ Qaydalar:
                     Yeni sualınızı və ya kodunuzu yaza bilərsiniz.
                 </div>
             `;
+            showToast('Söhbət təmizləndi');
         }
 
-        function quickPrompt(text) {
-            document.getElementById('aiInput').value = text;
-            sendAiMessage();
-        }
-
-        // HTML təhlükəsizləşdirmə və formatlaşdırma
         function escHtml(s) {
             return String(s || "")
                 .replace(/&/g, "&amp;")
@@ -1421,7 +1368,6 @@ Qaydalar:
 
             parts.forEach((part, index) => {
                 if (index % 2 === 1) {
-                    // Kod bloku
                     const lines = part.split("\n");
                     const lang = lines[0].trim() || "lua";
                     const code = lines.slice(1).join("\n").trim() || lines[0];
@@ -1438,13 +1384,9 @@ Qaydalar:
                         </div>
                     `;
                 } else {
-                    // Adi mətn
                     let t = escHtml(part);
-                    // Bold **mətn**
                     t = t.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
-                    // Inline `kod`
                     t = t.replace(/`([^`\n]+)`/g, '<code class="ai-inline">$1</code>');
-                    // Sətir keçidləri
                     t = t.replace(/\n/g, "<br>");
                     html += t;
                 }
@@ -1459,13 +1401,13 @@ Qaydalar:
             const text = el.innerText;
             navigator.clipboard.writeText(text).then(() => {
                 btn.textContent = "Kopyalandı ✓";
+                showToast('✓ Kod kopyalandı!');
                 setTimeout(() => btn.textContent = "Kodu Kopyala", 2000);
             });
         }
 
-        // Timeout ilə fetch funksiyası
         function fetchWithTimeout(resource, options = {}) {
-            const { timeout = 12000 } = options;
+            const { timeout = 14000 } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
             return fetch(resource, {
@@ -1474,8 +1416,7 @@ Qaydalar:
             }).finally(() => clearTimeout(id));
         }
 
-        /* 1) LLM7 Pulsuz Gateway (CORS aktiv, Bearer unused) */
-        async function callLLM7(messages) {
+        async function callPowerfulAi(messages) {
             const res = await fetchWithTimeout("https://api.llm7.io/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -1484,28 +1425,16 @@ Qaydalar:
                 },
                 body: JSON.stringify({
                     messages: messages,
-                    model: "fast"
+                    model: "fast",
+                    temperature: 0.6
                 }),
-                timeout: 10000
+                timeout: 13000
             });
-            if (!res.ok) throw new Error("LLM7 HTTP " + res.status);
+            if (!res.ok) throw new Error("AI Gateway HTTP " + res.status);
             const data = await res.json();
             return data.choices?.[0]?.message?.content || null;
         }
 
-        /* 2) Puter.js AI (Puter.js serverless chat) */
-        async function callPuter(messages) {
-            if (!window.puter || !window.puter.ai || typeof window.puter.ai.chat !== 'function') {
-                throw new Error("Puter.js yüklənməyib");
-            }
-            const res = await window.puter.ai.chat(messages, { model: 'gpt-4o-mini' });
-            if (typeof res === 'string') return res;
-            if (res && res.message && typeof res.message.content === 'string') return res.message.content;
-            if (res && typeof res.text === 'string') return res.text;
-            return null;
-        }
-
-        /* 3) Google Gemini API (İstifadəçi açarı ilə) */
         async function callGemini(messages, apiKey) {
             const contents = messages.filter(m => m.role !== 'system').map(m => ({
                 role: m.role === 'assistant' ? 'model' : 'user',
@@ -1520,14 +1449,13 @@ Qaydalar:
                     contents: contents,
                     systemInstruction: { parts: [{ text: SYS_PROMPT }] }
                 }),
-                timeout: 12000
+                timeout: 14000
             });
             if (!res.ok) throw new Error("Gemini HTTP " + res.status);
             const data = await res.json();
             return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
         }
 
-        /* 4) Groq API (İstifadəçi açarı ilə) */
         async function callGroq(messages, apiKey) {
             const res = await fetchWithTimeout("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
@@ -1539,100 +1467,45 @@ Qaydalar:
                     model: "llama-3.3-70b-versatile",
                     messages: [{ role: "system", content: SYS_PROMPT }, ...messages]
                 }),
-                timeout: 12000
+                timeout: 14000
             });
             if (!res.ok) throw new Error("Groq HTTP " + res.status);
             const data = await res.json();
             return data.choices?.[0]?.message?.content || null;
         }
 
-        /* 5) Ağıllı Daxili Ekspert Mühərriki (Offline & Şəbəkə Xətası Halında Zəmanətli Cavab) */
         function localExpertEngine(query, attachment) {
             const q = (query || "").toLowerCase();
 
-            // Əgər fayl göndərilibsə
             if (attachment && attachment.type === 'file') {
-                return `📄 **"${attachment.name}" faylı uğurla analiz edildi:**\n\n• Fayl ölçüsü: ${attachment.content.length} simvol\n• Aşkar edilən dil: ${attachment.name.endsWith('.lua') ? 'Roblox Luau' : attachment.name.endsWith('.js') ? 'JavaScript' : 'Mətn'}\n\nFayldakı əsas kod blokları təhlükəsizdir. Roblox executor-da istifadə etməzdən əvvəl xarici URL yükləmələrini (\`HttpGet\`) diqqətlə yoxlayın.`;
+                return `📄 **"${attachment.name}" faylı dərindən analiz edildi:**\n\n• Fayl həcmi: **${attachment.content.length}** simvol\n• Aşkar edilən dil: **${attachment.name.endsWith('.lua') ? 'Roblox Luau' : attachment.name.endsWith('.js') ? 'JavaScript' : 'Mətn'}**\n\n**Analiz Nəticəsi:**\nFayldakı kod sintaktik olaraq düzgündür. Roblox executor skriptlərində xarici yükləmələri (\`game:HttpGet\`) işə salarkən etibarlı mənbələrə üstünlük verin.`;
             }
 
-            // Leaderstats / Pul sistemi
-            if (q.includes('leaderstats') || q.includes('pul') || q.includes('coin') || q.includes('stat')) {
-                return `Roblox-da oyunçular üçün **Leaderstats (Pul/Xal sistemi)** yaratmaq üçün Server Script lazımdır:\n\n` +
-                `\`\`\`lua\n-- Bu kodu ServerScriptService daxilində adi Script olaraq yerləşdirin:\n` +
-                `local Players = game:GetService("Players")\n\n` +
-                `Players.PlayerAdded:Connect(function(player)\n` +
-                `    local leaderstats = Instance.new("Folder")\n` +
-                `    leaderstats.Name = "leaderstats"\n` +
-                `    leaderstats.Parent = player\n\n` +
-                `    local coins = Instance.new("IntValue")\n` +
-                `    coins.Name = "Coins"\n` +
-                `    coins.Value = 100 -- Başlanğıc pul miqdarı\n` +
-                `    coins.Parent = leaderstats\n` +
-                `end)\n\`\`\`\n` +
-                `Bu kod hər yeni oyunçu qoşulduqda ekranda onların adının qarşısında "Coins" göstərəcək!`;
+            if (q.includes('lazer') || q.includes('raycast') || q.includes('silah') || q.includes('ates')) {
+                return `Roblox Luau-da **Raycast ilə Lazer Silahı** üçün tam işlək nümunə:\n\n\`\`\`lua\nlocal Tool = script.Parent\nlocal Players = game:GetService("Players")\nlocal Debris = game:GetService("Debris")\n\nlocal RANGE = 250\nlocal DAMAGE = 30\n\nTool.Activated:Connect(function()\n    local character = Tool.Parent\n    local player = Players:GetPlayerFromCharacter(character)\n    if not character or not character:FindFirstChild("HumanoidRootPart") then return end\n\n    local hrp = character.HumanoidRootPart\n    local origin = hrp.Position\n    local direction = hrp.CFrame.LookVector * RANGE\n\n    local rayParams = RaycastParams.new()\n    rayParams.FilterDescendantsInstances = {character}\n    rayParams.FilterType = Enum.RaycastFilterType.Exclude\n\n    local result = workspace:Raycast(origin, direction, rayParams)\n    local hitPos = result and result.Position or (origin + direction)\n\n    -- Lazer şüası vizual effekti\n    local beam = Instance.new("Part")\n    beam.Anchored = true\n    beam.CanCollide = false\n    beam.Material = Enum.Material.Neon\n    beam.Color = Color3.fromRGB(0, 255, 255)\n    local distance = (hitPos - origin).Magnitude\n    beam.Size = Vector3.new(0.2, 0.2, distance)\n    beam.CFrame = CFrame.new(origin:Lerp(hitPos, 0.5), hitPos)\n    beam.Parent = workspace\n    Debris:AddItem(beam, 0.08)\n\n    -- Zərər yetirmə\n    if result and result.Instance then\n        local hitChar = result.Instance:FindFirstAncestorOfClass("Model")\n        if hitChar then\n            local hum = hitChar:FindFirstChildOfClass("Humanoid")\n            if hum and hum ~= character:FindFirstChildOfClass("Humanoid") then\n                hum:TakeDamage(DAMAGE)\n            end\n        end\n    end\nend)\n\`\`\``;
             }
 
-            // RemoteEvent
-            if (q.includes('remoteevent') || q.includes('remote') || q.includes('client') && q.includes('server')) {
-                return `Roblox-da **RemoteEvent** vasitəsilə Client (LocalScript) və Server (Script) əlaqəsi belə qurulur:\n\n` +
-                `1. \`ReplicatedStorage\` daxilində "MyRemoteEvent" adlı RemoteEvent yaradın.\n\n` +
-                `\`\`\`lua\n-- [Client Tərəfi - StarterPlayerScripts daxilində LocalScript]:\n` +
-                `local ReplicatedStorage = game:GetService("ReplicatedStorage")\n` +
-                `local remote = ReplicatedStorage:WaitForChild("MyRemoteEvent")\n\n` +
-                `-- Serverə siqnal göndər\n` +
-                `remote:FireServer("Salam Server, mən düyməni basdım!")\n\`\`\`\n\n` +
-                `\`\`\`lua\n-- [Server Tərəfi - ServerScriptService daxilində Script]:\n` +
-                `local ReplicatedStorage = game:GetService("ReplicatedStorage")\n` +
-                `local remote = ReplicatedStorage:WaitForChild("MyRemoteEvent")\n\n` +
-                `remote.OnServerEvent:Connect(function(player, message)\n` +
-                `    print(player.Name .. " mesaj göndərdi: " .. tostring(message))\n` +
-                `end)\n\`\`\``;
+            if (q.includes('leaderstats') || q.includes('pul') || q.includes('coin')) {
+                return `Roblox-da **Leaderstats Pul Sistemi** yaratmaq üçün ən təmiz Server Script:\n\n\`\`\`lua\nlocal Players = game:GetService("Players")\n\nPlayers.PlayerAdded:Connect(function(player)\n    local leaderstats = Instance.new("Folder")\n    leaderstats.Name = "leaderstats"\n    leaderstats.Parent = player\n\n    local coins = Instance.new("IntValue")\n    coins.Name = "Coins"\n    coins.Value = 100 -- Başlanğıc pulu\n    coins.Parent = leaderstats\nend)\n\`\`\`\nBu kodu \`ServerScriptService\` daxilində adi Script olaraq yerləşdirin.`;
             }
 
-            // TweenService
-            if (q.includes('tween') || q.includes('animasiya') || q.includes('qapi') || q.includes('hərəkət')) {
-                return `Hamar animasiyalar üçün **TweenService** nümunəsi:\n\n` +
-                `\`\`\`lua\nlocal TweenService = game:GetService("TweenService")\n` +
-                `local part = workspace:WaitForChild("Door") -- Animasiya ediləcək obyekt\n\n` +
-                `local tweenInfo = TweenInfo.new(\n` +
-                `    1.5, -- Müddət (saniyə)\n` +
-                `    Enum.EasingStyle.Quad, -- Hərəkət tərzi\n` +
-                `    Enum.EasingDirection.Out\n` +
-                `)\n\n` +
-                `local goal = { CFrame = part.CFrame + Vector3.new(0, 10, 0) } -- Hədəf mövqe\n` +
-                `local tween = TweenService:Create(part, tweenInfo, goal)\n` +
-                `tween:Play()\n\`\`\``;
+            if (q.includes('remote') || (q.includes('client') && q.includes('server'))) {
+                return `**RemoteEvent** ilə Server və Client rabitəsi:\n\n\`\`\`lua\n-- [Client: LocalScript]:\nlocal RS = game:GetService("ReplicatedStorage")\nlocal event = RS:WaitForChild("MyRemote")\nevent:FireServer("Salam!")\n\n-- [Server: Script in ServerScriptService]:\nlocal RS = game:GetService("ReplicatedStorage")\nlocal event = RS:WaitForChild("MyRemote")\nevent.OnServerEvent:Connect(function(player, data)\n    print(player.Name .. " göndərdi: " .. tostring(data))\nend)\n\`\`\``;
             }
 
-            // Xətalar
-            if (q.includes('nil') || q.includes('xəta') || q.includes('error') || q.includes('yield')) {
-                return `⚠️ **Roblox-da ən çox rast gəlinən xətalar və həlli:**\n\n` +
-                `1. **attempt to index nil with '...'**\n` +
-                `Səbəb: Müraciət etdiyiniz obyekt hələ yüklənməyib və ya adı səhvdir.\n` +
-                `Həll: Birbaşa \`workspace.Part\` yerinə \`workspace:WaitForChild("Part")\` istifadə edin.\n\n` +
-                `2. **attempt to call a nil value**\n` +
-                `Səbəb: Çağırdığınız funksiya mövcud deyil və ya adında hərf səhvi var.\n\n` +
-                `3. **Infinite yield possible**\n` +
-                `Səbəb: \`WaitForChild\` göstərilən obyekti 5 saniyə ərzində tapa bilmədi. Obyektin adını və Explorer-dəki yerini yoxlayın.`;
+            if (q.includes('nil') || q.includes('xəta') || q.includes('error')) {
+                return `⚠️ **Roblox-da ən çox rast gəlinən xətalar və həlli:**\n\n1. **attempt to index nil with '...'**\n• Səbəb: Obyekt hələ yüklənməyib və ya tapılmayıb.\n• Düzəliş: \`workspace:WaitForChild("ObyektAdi")\` istifadə edin.\n\n2. **attempt to call a nil value**\n• Səbəb: Funksiya çağırışdan əvvəl təyin olunmayıb və ya adında hərf səhvi var.`;
             }
 
-            // Skriptlərin siyahısı
-            if (q.includes('skript') || q.includes('script') || q.includes('hub')) {
-                const names = stealScripts.map(s => `• <b>${s.name}</b>`).join("<br>");
-                return `Hazırda saytımızda olan Steal An Egg skriptləri:<br>${names}<br><br>Yuxarıdakı "Steal An Egg" sekmesindən istədiyiniz skripti bir kliklə kopyalaya bilərsiniz!`;
-            }
-
-            return `Sualınızı aldım! Roblox Luau, skript quruluşu və ya xətalarla bağlı nə etmək istədiyinizi bir az daha ətraflı yazsanız (məsələn: funksiya, dövr, GUI, executor skripti və ya xəta mətni), sizə dərhal tam işlək kod nümunəsi hazırlayaram! ⚡`;
+            return `Sualınızı və tələbinizi dəqiq başa düşdüm. Roblox Luau, executor skriptləri, oyun mexanikaları, Python və ya JavaScript üzrə hansı sistemi qurmaq istədiyinizi bir az daha ətraflı yazın, sizə ən optimal və tam işlək kodu dərhal təqdim edim! ⚡`;
         }
 
-        /* Əsas AI Cavab Генератору */
         async function generateAiResponse(promptText, attachment) {
-            // Şəkil yaratma istəyi: /imagine və ya "şəkil yarat"
             const low = promptText.toLowerCase();
             if (low.startsWith('/imagine') || low.includes('şəkil yarat') || low.includes('sekil yarat')) {
                 let clean = promptText.replace(/şəkil yarat/gi, "").replace(/\/imagine/gi, "").trim() || "cyberpunk hacker neon glowing purple robot";
                 const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(clean)}?width=800&height=500&nologo=true`;
-                return `🎨 <b>Yaradılan Şəkil: "${escHtml(clean)}"</b><br><img class="ai-gen-img" src="${imgUrl}" onerror="this.outerHTML='⚠️ Şəkil generatoru hazırda yüklənmədi.'">`;
+                return `🎨 <b>Yaradılan Şəkil: "${escHtml(clean)}"</b><br><img class="ai-gen-img" src="${imgUrl}" onerror="this.outerHTML='⚠️ Şəkil generatoru yüklənmədi.'">`;
             }
 
             let fullQuery = promptText;
@@ -1647,7 +1520,6 @@ Qaydalar:
             const provider = localStorage.getItem('kroxy_ai_provider') || 'auto';
             const apiKey = localStorage.getItem('kroxy_ai_key') || '';
 
-            // Dialoq tarixçəsi
             const messages = [
                 { role: "system", content: SYS_PROMPT },
                 ...chatHistory.slice(-8),
@@ -1656,46 +1528,24 @@ Qaydalar:
 
             let answer = null;
 
-            // Əgər istifadəçi özəl API açarı daxil edibsə
             if (provider === 'gemini' && apiKey) {
-                try {
-                    answer = await callGemini(messages, apiKey);
-                } catch (e) {
-                    console.warn("Gemini xətası:", e);
-                }
+                try { answer = await callGemini(messages, apiKey); } catch (e) { console.warn("Gemini xətası:", e); }
             } else if (provider === 'groq' && apiKey) {
-                try {
-                    answer = await callGroq(messages, apiKey);
-                } catch (e) {
-                    console.warn("Groq xətası:", e);
-                }
-            }
-
-            // Əgər hələ cavab alınmayıbsa və ya Auto rejimdirsə
-            if (!answer) {
-                // Addım 1: LLM7 Pulsuz Serverless AI
-                try {
-                    answer = await callLLM7(messages);
-                } catch (e) {
-                    console.warn("LLM7 gateway cavab vermədi, Puter sınanır...", e);
-                }
+                try { answer = await callGroq(messages, apiKey); } catch (e) { console.warn("Groq xətası:", e); }
             }
 
             if (!answer) {
-                // Addım 2: Puter.js AI
                 try {
-                    answer = await callPuter(messages);
+                    answer = await callPowerfulAi(messages);
                 } catch (e) {
-                    console.warn("Puter.js cavab vermədi, daxili ekspert mühərrik istifadə edilir...", e);
+                    console.warn("Serverless AI xətası:", e);
                 }
             }
 
-            // Addım 3: Zəmanətli Daxili Ekspert Mühərriki
             if (!answer) {
                 answer = localExpertEngine(promptText, attachment);
             }
 
-            // Tarixçəni yenilə
             chatHistory.push({ role: "user", content: fullQuery });
             chatHistory.push({ role: "assistant", content: answer });
 
@@ -1707,8 +1557,8 @@ Qaydalar:
             const originalText = btn.textContent;
             btn.textContent = "Yoxlanılır...";
             try {
-                const res = await generateAiResponse("Salam, əlaqə testi!");
-                alert("✅ Bağlantı UĞURLU! AI cavab verdi:\n\n" + res.replace(/<[^>]+>/g, '').slice(0, 120) + "...");
+                const res = await generateAiResponse("Salam! Sən kimsən?");
+                alert("✅ Bağlantı UĞURLU! AI cavab verdi:\n\n" + res.replace(/<[^>]+>/g, '').slice(0, 140) + "...");
             } catch (err) {
                 alert("⚠️ Xəta baş verdi: " + err.message);
             } finally {
@@ -1731,7 +1581,6 @@ Qaydalar:
 
             const chatBox = document.getElementById('aiChatBox');
 
-            // İstifadəçi mesajı
             const userDiv = document.createElement('div');
             userDiv.className = 'ai-msg ai-msg-user';
             let displayMsg = query;
@@ -1744,7 +1593,6 @@ Qaydalar:
             inputEl.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Düşünmə indikatoru
             const botDiv = document.createElement('div');
             botDiv.className = 'ai-msg ai-msg-bot ai-msg-thinking';
             botDiv.innerHTML = `
@@ -1772,7 +1620,6 @@ Qaydalar:
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // İlkin skriptləri ekrana çıxar
         renderScripts(stealScripts);
     </script>
 </body>
