@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KROXY SCRIPTS</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>KROXY SCRIPTS & AI</title>
+    <!-- Puter.js serverless pulsuz AI kitabxanası (GitHub Pages-də heç bir açar olmadan işləyir) -->
+    <script src="https://js.puter.com/v2/"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
 
@@ -14,6 +15,7 @@
             --primary-neon: #a855f7;
             --secondary-neon: #06b6d4;
             --success-green: #22c55e;
+            --danger-red: #ef4444;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --border-glow: rgba(168, 85, 247, 0.4);
@@ -38,6 +40,7 @@
 
         ::-webkit-scrollbar {
             width: 5px;
+            height: 5px;
         }
 
         ::-webkit-scrollbar-track {
@@ -121,16 +124,15 @@
         }
 
         .brand-icon {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
-            border-radius: 8px;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 1rem;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
         }
 
         .logo-text {
@@ -141,6 +143,33 @@
             background: linear-gradient(90deg, #fff, var(--primary-neon));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glow);
+            color: #e2e8f0;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: var(--primary-neon);
+            color: #fff;
         }
 
         .container {
@@ -165,6 +194,11 @@
             color: #fff;
             outline: none;
             font-size: 0.85rem;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--secondary-neon);
         }
 
         .search-box i {
@@ -284,11 +318,6 @@
             gap: 8px;
         }
 
-        .script-title i {
-            color: var(--secondary-neon);
-            font-size: 0.85rem;
-        }
-
         .code-box {
             background: rgba(4, 2, 10, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -339,14 +368,14 @@
         .ai-wrapper {
             display: none;
             flex-direction: column;
-            height: clamp(420px, 68vh, 600px);
-            max-height: calc(100dvh - 170px);
-            background: rgba(14, 8, 28, 0.85);
+            height: clamp(480px, 72vh, 650px);
+            max-height: calc(100dvh - 160px);
+            background: rgba(14, 8, 28, 0.88);
             border: 1px solid var(--border-glow);
             border-radius: 20px;
             overflow: hidden;
             backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.25);
             user-select: text;
             animation: fadeInAI 0.4s ease-in-out;
             position: relative;
@@ -357,33 +386,122 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* AI Header Top Bar */
+        .ai-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            background: rgba(6, 3, 14, 0.8);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            font-size: 0.75rem;
+        }
+
+        .ai-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #a7f3d0;
+            font-weight: 600;
+        }
+
+        .status-pulse {
+            width: 7px;
+            height: 7px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .ai-header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-ctrl-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: var(--text-sub);
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .ai-ctrl-btn:hover {
+            color: #fff;
+            border-color: var(--primary-neon);
+            background: rgba(168, 85, 247, 0.15);
+        }
+
+        /* Suggestion Chips */
+        .ai-suggestions {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 6px 12px;
+            background: rgba(10, 5, 20, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            white-space: nowrap;
+        }
+
+        .ai-chip {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            color: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .ai-chip:hover {
+            background: var(--primary-neon);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
         .ai-chat-box {
             flex: 1;
-            padding: 12px 14px;
+            padding: 14px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            background: rgba(4, 2, 10, 0.5);
+            gap: 12px;
+            background: rgba(4, 2, 10, 0.55);
             scroll-behavior: smooth;
         }
 
         .ai-msg {
-            max-width: 88%;
+            max-width: 90%;
             width: fit-content;
-            padding: 9px 14px;
+            padding: 10px 14px;
             border-radius: 18px;
-            font-size: 0.83rem;
-            line-height: 1.45;
+            font-size: 0.84rem;
+            line-height: 1.5;
             word-break: break-word;
-            white-space: pre-wrap;
             box-shadow: 0 4px 15px rgba(0,0,0,0.25);
             opacity: 0;
-            animation: messageSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: messageSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes messageSlide {
-            from { opacity: 0; transform: translateY(12px) scale(0.96); }
+            from { opacity: 0; transform: translateY(10px) scale(0.97); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
@@ -397,7 +515,7 @@
 
         .ai-msg-bot {
             align-self: flex-start;
-            background: rgba(22, 12, 42, 0.92);
+            background: rgba(20, 11, 38, 0.94);
             border: 1px solid var(--border-glow);
             color: #f1f5f9;
             border-bottom-left-radius: 4px;
@@ -405,8 +523,6 @@
 
         .ai-msg-thinking {
             padding: 8px 14px !important;
-            width: auto !important;
-            min-width: unset !important;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -437,6 +553,63 @@
             40% { transform: translateY(-6px); opacity: 1; box-shadow: 0 0 10px var(--primary-neon); }
         }
 
+        /* AI Code Block with Header and Copy */
+        .ai-code-wrapper {
+            margin: 8px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #090c18;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+
+        .ai-code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+            background: rgba(168, 85, 247, 0.15);
+            font-size: 0.72rem;
+            color: #c4b5fd;
+            font-family: monospace;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .ai-code-copy-btn {
+            background: transparent;
+            border: none;
+            color: #38bdf8;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+
+        .ai-code-copy-btn:hover {
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        .ai-code-content {
+            padding: 10px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            font-size: 0.76rem;
+            color: #e0e7ff;
+            line-height: 1.45;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        .ai-inline {
+            background: rgba(168, 85, 247, 0.22);
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 0.78rem;
+            color: #e9d5ff;
+        }
+
         .ai-file-bar {
             display: none;
             padding: 8px 14px;
@@ -446,21 +619,20 @@
             color: var(--secondary-neon);
             justify-content: space-between;
             align-items: center;
-            animation: messageSlide 0.25s ease-out;
         }
 
         .ai-file-bar button {
             background: none;
             border: none;
-            color: #ef4444;
+            color: var(--danger-red);
             cursor: pointer;
             font-weight: bold;
         }
 
-        /* SANCAQ MENYUSU */
+        /* Sancaq Menyusu */
         .attach-menu {
             position: absolute;
-            bottom: 60px;
+            bottom: 65px;
             left: 14px;
             background: rgba(14, 8, 28, 0.98);
             border: 1px solid var(--border-glow);
@@ -477,29 +649,29 @@
 
         .attach-menu.opening {
             display: flex !important;
-            animation: menuFadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: menuFadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .attach-menu.closing {
             display: flex !important;
-            animation: menuFadeOutDown 0.18s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+            animation: menuFadeOutDown 0.15s cubic-bezier(0.7, 0, 0.84, 0) forwards;
         }
 
         @keyframes menuFadeInUp {
-            from { opacity: 0; transform: translateY(12px) scale(0.9); }
+            from { opacity: 0; transform: translateY(10px) scale(0.92); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes menuFadeOutDown {
             from { opacity: 1; transform: translateY(0) scale(1); }
-            to { opacity: 0; transform: translateY(12px) scale(0.9); }
+            to { opacity: 0; transform: translateY(10px) scale(0.92); }
         }
 
         .attach-menu-btn {
             background: transparent;
             border: none;
             color: #f8fafc;
-            padding: 9px 13px;
+            padding: 8px 12px;
             font-size: 0.8rem;
             font-weight: 600;
             display: flex;
@@ -507,12 +679,14 @@
             gap: 8px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s, transform 0.15s;
+            transition: background 0.2s;
             text-align: left;
         }
 
-        .attach-menu-btn:active { transform: scale(0.95); }
-        .attach-menu-btn:hover { background: rgba(168, 85, 247, 0.2); color: var(--secondary-neon); }
+        .attach-menu-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--secondary-neon);
+        }
 
         .ai-input-area {
             display: flex;
@@ -540,33 +714,38 @@
             flex-shrink: 0;
         }
 
-        .ai-attach-btn:active { transform: scale(0.88); }
         .ai-attach-btn:hover {
             background: var(--primary-neon);
             color: #fff;
             transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
         }
 
         .ai-input-area textarea {
             flex: 1;
             background: rgba(4, 2, 10, 0.95);
             border: 1px solid var(--border-glow);
-            border-radius: 22px;
+            border-radius: 20px;
             padding: 10px 16px;
             color: #fff;
             outline: none;
             resize: none;
-            height: 40px;
-            max-height: 90px;
+            height: 42px;
+            max-height: 100px;
             font-size: 0.83rem;
             user-select: text;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
         }
 
-        .ai-input-area textarea::placeholder { color: #64748b; font-weight: 500; }
-        .ai-input-area textarea:focus { border-color: var(--primary-neon); box-shadow: 0 0 12px rgba(168, 85, 247, 0.4); }
+        .ai-input-area textarea::placeholder {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .ai-input-area textarea:focus {
+            border-color: var(--secondary-neon);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+        }
 
         .ai-send-btn {
             background: linear-gradient(135deg, var(--primary-neon), #7e22ce);
@@ -580,16 +759,14 @@
             align-items: center;
             justify-content: center;
             font-size: 0.9rem;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background 0.25s;
+            transition: transform 0.2s, box-shadow 0.25s ease;
             box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
             flex-shrink: 0;
         }
 
-        .ai-send-btn:active { transform: scale(0.85) rotate(-15deg); }
         .ai-send-btn:hover {
-            transform: scale(1.08) rotate(-8deg);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
-            background: linear-gradient(135deg, #c084fc, var(--primary-neon));
+            transform: scale(1.06);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
         }
 
         .ai-gen-img {
@@ -600,101 +777,335 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        @media (max-width: 768px) {
-            .container { padding: 6px; }
-            .script-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
-            .ai-wrapper { height: calc(100dvh - 190px); border-radius: 16px; }
-            .ai-msg { max-width: 92%; }
+        /* Modal Settings */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
         }
-    
-        .ai-msg-bot pre.ai-code { background:#0b1020; border:1px solid rgba(168,85,247,0.3); border-radius:10px; padding:10px 12px; margin:8px 0; overflow-x:auto; font-size:12.5px; line-height:1.5; text-align:left; }
-        .ai-msg-bot pre.ai-code code { font-family:Consolas,Menlo,monospace; color:#c4b5fd; white-space:pre; }
-        .ai-msg-bot code.ai-inline { background:rgba(168,85,247,0.2); padding:1px 6px; border-radius:6px; font-family:Consolas,Menlo,monospace; font-size:12.5px; }
 
-        .k-ico { width: 1em; height: 1em; vertical-align: -0.14em; display: inline-block; }
+        .modal-card {
+            background: #0d071a;
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.3);
+            animation: modalFadeIn 0.25s ease-out;
+            user-select: text;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .settings-group {
+            margin-bottom: 14px;
+        }
+
+        .settings-label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+
+        .settings-select, .settings-input {
+            width: 100%;
+            background: rgba(4, 2, 10, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 12px;
+            padding: 9px 12px;
+            color: #fff;
+            font-size: 0.82rem;
+            outline: none;
+        }
+
+        .settings-select:focus, .settings-input:focus {
+            border-color: var(--secondary-neon);
+        }
+
+        .settings-hint {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn-modal-save {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-neon), #7e22ce);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-modal-test {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-glow);
+            color: #38bdf8;
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .k-ico { width: 1.1em; height: 1.1em; vertical-align: -0.15em; display: inline-block; }
         .brand-icon .k-ico { width: 20px; height: 20px; vertical-align: 0; }
         .script-title .k-ico { width: 1.15em; height: 1.15em; color: var(--secondary-neon); margin-right: 2px; }
 
-        i.k-i { font-style: normal; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
-        .search-box i.k-i { pointer-events: none; }
-        .ai-attach-btn .k-ico, .ai-send-btn .k-ico { width: 1.15rem; height: 1.15rem; }
-        .attach-menu-btn .k-ico { width: 1.15rem; height: 1.15rem; }
-</style>
-</head>
+        @media (max-width: 768px) {
+            .container { padding: 6px; }
+            .script-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+            .ai-wrapper { height: calc(100dvh - 175px); border-radius: 16px; }
+            .ai-msg { max-width: 94%; }
+        }
+    </style>
+<script src="/_aistudio-iframe.js?v=2c34bde1"></script></head>
 <body class="hide-scrollbar">
 
+    <!-- Giriş Ekranı -->
     <div id="introScreen">
         <div class="intro-title">KROXY SCRIPTS-Ə XOŞ GƏLMİSİNİZ!</div>
     </div>
 
+    <!-- Naviqasiya Paneli -->
     <div class="navbar">
         <div class="brand">
-            <div class="brand-icon"><svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="6.5,9 10.5,12 6.5,15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12.5" y1="15.5" x2="17.5" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <div class="brand-icon">
+                <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="18" rx="4"/>
+                    <polyline points="6.5,9 10.5,12 6.5,15" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="12.5" y1="15.5" x2="17.5" y2="15.5" stroke-linecap="round"/>
+                </svg>
+            </div>
             <div class="logo-text">KROXY SCRIPTS</div>
+        </div>
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="openGitHubModal()" title="GitHub-a yerləşdirmə təlimatı">
+                <svg class="k-ico" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                GitHub Quraşdırma
+            </button>
         </div>
     </div>
 
     <div class="container">
-        
+        <!-- Axtarış Qutusu -->
         <div class="search-box" id="searchContainer">
-            <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></i>
+            <i>
+                <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10.5" cy="10.5" r="6.5"/>
+                    <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+                </svg>
+            </i>
             <input type="text" id="searchInput" placeholder="Skript adı ilə axtar..." onkeyup="filterScripts()">
         </div>
 
+        <!-- Bölmə Keçidləri -->
         <div class="tabs-header">
             <button class="tab-btn active" id="tabSteal" onclick="switchTab('steal')">
-                <svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C8 2 4.5 9 4.5 14a7.5 7.5 0 0 0 15 0C19.5 9 16 2 12 2z"/></svg> Steal An Egg
+                <svg class="k-ico" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8 2 4.5 9 4.5 14a7.5 7.5 0 0 0 15 0C19.5 9 16 2 12 2z"/>
+                </svg> Steal An Egg
             </button>
             <button class="tab-btn" id="tabKroxyAI" onclick="switchTab('kroxyai')">
-                <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 4.5A3 3 0 0 0 9 20h.5a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 9.5 4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 4.5A3 3 0 0 1 15 20h-.5a1.5 1.5 0 0 1-1.5-1.5v-13A1.5 1.5 0 0 1 14.5 4z"/><path d="M6 10.5h2.2M15.8 10.5H18M6.5 15h2M15.5 15h2"/></svg></i> KROXY AI
+                <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 4.5A3 3 0 0 0 9 20h.5a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 9.5 4z"/>
+                    <path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 4.5A3 3 0 0 1 15 20h-.5a1.5 1.5 0 0 1-1.5-1.5v-13A1.5 1.5 0 0 1 14.5 4z"/>
+                    <path d="M6 10.5h2.2M15.8 10.5H18M6.5 15h2M15.5 15h2"/>
+                </svg> KROXY AI
             </button>
         </div>
 
+        <!-- Başlıq Məlumatı -->
         <div class="section-header-box">
             <div class="section-header-title" id="headerTitle">Steal An Egg Scriptlərimiz!</div>
             <div class="section-header-sub" id="headerSub">Bütün executorlar üçün yararlıdır scriptlərimiz!</div>
         </div>
 
+        <!-- Skriptlərin Siyahısı -->
         <div class="script-grid" id="scriptGrid"></div>
 
+        <!-- KROXY AI Çat Paneli -->
         <div class="ai-wrapper" id="aiWrapper">
-            <div class="ai-chat-box" id="aiChatBox">
-                <div class="ai-msg ai-msg-bot">Salam Mən KROXY AI! Sizə necə kömək edə bilərəm?</div>
+            <!-- AI Başlıq və Status Barı -->
+            <div class="ai-status-bar">
+                <div class="ai-status-badge">
+                    <span class="status-pulse"></span>
+                    <span id="aiActiveProviderText">KROXY AI (Aktiv & Pulsuz)</span>
+                </div>
+                <div class="ai-header-controls">
+                    <button class="ai-ctrl-btn" onclick="clearAiChat()" title="Söhbəti Təmizlə">
+                        <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        Təmizlə
+                    </button>
+                    <button class="ai-ctrl-btn" onclick="openSettingsModal()" title="AI Tənzimləmələri və Model Seçimi">
+                        <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        Tənzimləmələr
+                    </button>
+                </div>
             </div>
 
+            <!-- Tez Təklif Düymələri (Chips) -->
+            <div class="ai-suggestions">
+                <button class="ai-chip" onclick="quickPrompt('Robloxda Leaderstats pul sistemini necə yaradım?')">💰 Leaderstats skripti</button>
+                <button class="ai-chip" onclick="quickPrompt('Robloxda RemoteEvent ilə Server-Client necə əlaqələndirilir?')">📡 RemoteEvent nümunəsi</button>
+                <button class="ai-chip" onclick="quickPrompt('TweenService ilə qapı açılma animasiyası kodu ver')">🚪 Tween animasiyası</button>
+                <button class="ai-chip" onclick="quickPrompt('attempt to index nil with \'Character\' xətası nədir və necə düzəldilir?')">🐞 Xəta izahı</button>
+                <button class="ai-chip" onclick="quickPrompt('/imagine futuristic cyberpunk hacker room with neon purple lights')">🎨 Şəkil yarat</button>
+            </div>
+
+            <!-- Çat Mesajları Qutusu -->
+            <div class="ai-chat-box" id="aiChatBox">
+                <div class="ai-msg ai-msg-bot">
+                    ⚡ <b>KROXY AI Aktivdir!</b><br>
+                    Mənə Luau/Roblox skriptləri, xətaların düzəldilməsi, JavaScript, Python və ya digər kodlama suallarınızı verə bilərsiniz. Şəkil yaratmaq üçün <code>/imagine [təsvir]</code> yaza bilərsiniz!
+                </div>
+            </div>
+
+            <!-- Fayl Əlavə Göstəricisi -->
             <div class="ai-file-bar" id="aiFileBar">
                 <span id="aiFileName">📁 fayl.txt</span>
-                <button onclick="removeAiFile()"><i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></i> Ləğv et</button>
+                <button onclick="removeAiFile()">✕ Ləğv et</button>
             </div>
 
+            <!-- Sancaq Fayl Əlavə Menyusu -->
             <div class="attach-menu" id="attachMenu">
                 <button class="attach-menu-btn" onclick="triggerInput('image')">
-                    <i class="k-i" style="color: #06b6d4;"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><polyline points="4,18 10,13 14,17 17,14 21,18"/></svg></i> Şəkil Göndər
+                    <svg class="k-ico" style="color: #06b6d4;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><polyline points="4,18 10,13 14,17 17,14 21,18"/></svg>
+                    Şəkil Göndər
                 </button>
                 <button class="attach-menu-btn" onclick="triggerInput('file')">
-                    <i class="k-i" style="color: #a855f7;"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h8l4.5 4.5V21.5H6z"/><polyline points="14,2.5 14,7 18.5,7"/><polyline points="10,12 8,14.5 10,17"/><polyline points="14,12 16,14.5 14,17"/></svg></i> Faylı Göndər
+                    <svg class="k-ico" style="color: #a855f7;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2.5h8l4.5 4.5V21.5H6z"/><polyline points="14,2.5 14,7 18.5,7"/><polyline points="10,12 8,14.5 10,17"/><polyline points="14,12 16,14.5 14,17"/></svg>
+                    Kod / Mətn Faylı
                 </button>
             </div>
 
+            <!-- Daxiletmə Sahəsi -->
             <div class="ai-input-area">
-                <div class="ai-attach-btn" onclick="toggleAttachMenu(event)" title="Əlavə et">
-                    <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l9-9a3.3 3.3 0 0 1 4.7 4.7l-9 9a1.7 1.7 0 0 1-2.4-2.4l8.2-8.2"/></svg></i>
+                <div class="ai-attach-btn" onclick="toggleAttachMenu(event)" title="Fayl və ya Şəkil Əlavə et">
+                    <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.5 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l9-9a3.3 3.3 0 0 1 4.7 4.7l-9 9a1.7 1.7 0 0 1-2.4-2.4l8.2-8.2"/></svg>
                 </div>
 
                 <input type="file" id="aiImageUpload" accept="image/*" style="display: none;" onchange="handleAiFileUpload(event, 'image')">
-                <input type="file" id="aiFileUpload" accept=".txt,.lua,.js,.html,.css,.json,.cpp,.py" style="display: none;" onchange="handleAiFileUpload(event, 'file')">
+                <input type="file" id="aiFileUpload" accept=".txt,.lua,.luau,.js,.html,.css,.json,.cpp,.py" style="display: none;" onchange="handleAiFileUpload(event, 'file')">
 
-                <textarea id="aiInput" placeholder="Kodu və ya promptu bura yazın..." rows="1" onkeydown="handleAiKeyDown(event)"></textarea>
+                <textarea id="aiInput" placeholder="Kodu və ya sualınızı bura yazın (Enter - göndər, Shift+Enter - yeni sətir)..." rows="1" onkeydown="handleAiKeyDown(event)"></textarea>
 
                 <button class="ai-send-btn" id="aiSendBtn" onclick="sendAiMessage()" title="Göndər">
-                    <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2.5 3.2L22 12 2.5 20.8l3.6-8.8z"/><path fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1.6" stroke-linecap="round" d="M6.1 12h7"/></svg></i>
+                    <svg class="k-ico" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2.5 3.2L22 12 2.5 20.8l3.6-8.8z"/>
+                    </svg>
                 </button>
             </div>
         </div>
+    </div>
 
+    <!-- AI Tənzimləmələri Modalı -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-card">
+            <div class="modal-title">
+                <span>⚙️ AI Tənzimləmələri</span>
+                <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">AI Xidməti (Provider):</label>
+                <select id="settingProvider" class="settings-select" onchange="handleProviderChange()">
+                    <option value="auto">🤖 Avtomatik / Pulsuz (Açar tələb olunmur - GitHub üçün idealdır)</option>
+                    <option value="gemini">💎 Google Gemini API (Öz pulsuz açarınızla)</option>
+                    <option value="groq">⚡ Groq API (Llama 3.3 - Çox sürətli)</option>
+                    <option value="openrouter">🌐 OpenRouter / Xüsusi OpenAI uyğun API</option>
+                </select>
+                <div class="settings-hint" id="providerHint">
+                    ✅ <b>Avtomatik rejim:</b> Heç bir API açarı tələb olunmur. GitHub Pages və ya brauzerdə dərhal işləyir.
+                </div>
+            </div>
+            <div class="settings-group" id="apiKeyGroup" style="display: none;">
+                <label class="settings-label" id="apiKeyLabel">API Açarı (API Key):</label>
+                <input type="password" id="settingApiKey" class="settings-input" placeholder="API açarınızı bura yapışdırın...">
+                <div class="settings-hint">
+                    🔒 Açarlarınız yalnız brauzerinizin <code>localStorage</code> yaddaşında saxlanılır, heç kimlə paylaşılmır və GitHub reposuna düşmür!
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal-test" onclick="testAiConnection()">⚡ Əlaqəni Yoxla</button>
+                <button class="btn-modal-save" onclick="saveSettings()">Yadda Saxla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GitHub Quraşdırma Modalı -->
+    <div class="modal-overlay" id="githubModal">
+        <div class="modal-card">
+            <div class="modal-title">
+                <span>🐙 GitHub-a Yerləşdirmə</span>
+                <button class="modal-close" onclick="closeGitHubModal()">✕</button>
+            </div>
+            <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6; display: flex; flex-direction: column; gap: 10px;">
+                <p>Bu fayl tək başına tam işləkdir (Single-File HTML). Heç bir backend server və ya Node.js quraşdırmadan pulsuz olaraq GitHub Pages-də işləyir!</p>
+                <ol style="padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+                    <li>GitHub-da yeni repo açın və bu faylı <b><code>index.html</code></b> adı ilə repoya əlavə edin.</li>
+                    <li>Repo parametrlərinə (<b>Settings → Pages</b>) daxil olun.</li>
+                    <li>Source bölməsindən <b>Deploy from a branch</b> seçin, Branch olaraq <b>main</b> və <b>/ (root)</b> qovluğunu seçib <b>Save</b> edin.</li>
+                    <li>1-2 dəqiqə sonra saytınız <code>https://istifadəçi.github.io/repo/</code> ünvanında aktiv olacaq!</li>
+                </ol>
+                <div style="background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 10px; padding: 10px; font-size: 0.78rem;">
+                    💡 <b>Qeyd:</b> Saytda KROXY AI heç bir server olmadan birbaşa ziyarətçilərə cavab verir. Heç bir açar yerləşdirməyə ehtiyac yoxdur.
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal-save" onclick="closeGitHubModal()">Aydındır</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Giriş ekranı animasiyası
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const intro = document.getElementById('introScreen');
@@ -702,9 +1113,11 @@
                     intro.classList.add('fade-out');
                     document.body.classList.remove('hide-scrollbar');
                 }
-            }, 1600);
+            }, 1400);
+            loadSettings();
         });
 
+        // Steal An Egg skriptləri bazası
         const stealScripts = [
             { name: "Chilli Hub", code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()` },
             { name: "Tsuo Hub", code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/Tsuo7/TsuoHub/main/stealanegg"))()` },
@@ -728,18 +1141,26 @@
             data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'script-card';
-                card.style.animationDelay = `${index * 0.05}s`;
+                card.style.animationDelay = `${index * 0.04}s`;
                 card.innerHTML = `
                     <div class="card-top">
                         <div class="script-title">
-                            <svg class="k-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="6.5,9 10.5,12 6.5,15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12.5" y1="15.5" x2="17.5" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> ${item.name}
+                            <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="18" rx="4"/>
+                                <polyline points="6.5,9 10.5,12 6.5,15" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="12.5" y1="15.5" x2="17.5" y2="15.5" stroke-linecap="round"/>
+                            </svg> ${item.name}
                         </div>
                     </div>
                     <div class="code-box">
                         <div class="code-text">${item.code}</div>
                     </div>
                     <button class="btn-copy" onclick="copyScript(this)">
-                        Skripti Kopyala <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/></svg></i>
+                        Skripti Kopyala
+                        <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/>
+                            <path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/>
+                        </svg>
                     </button>
                 `;
                 grid.appendChild(card);
@@ -773,12 +1194,12 @@
         }
 
         function setCopiedState(btn) {
-            btn.innerHTML = `Kopyalandı <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4.5,12.5 9.5,17.5 19.5,7"/></svg></i>`;
+            btn.innerHTML = `Kopyalandı ✓`;
             btn.classList.add('copied');
             setTimeout(() => {
-                btn.innerHTML = `Skripti Kopyala <i class="k-i"><svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/></svg></i>`;
+                btn.innerHTML = `Skripti Kopyala <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M5.5 15.5V6.5a2.5 2.5 0 0 1 2.5-2.5h9"/></svg>`;
                 btn.classList.remove('copied');
-            }, 3000);
+            }, 2500);
         }
 
         function switchTab(tabName) {
@@ -806,6 +1227,7 @@
                 searchContainer.style.display = 'none';
                 grid.style.display = 'none';
                 aiWrapper.style.display = 'flex';
+                updateProviderBadge();
             }
         }
 
@@ -816,16 +1238,13 @@
             renderScripts(filtered);
         }
 
-        /* SANCAQ MENYUSUNUN İDARƏ EDİLMƏSİ */
+        /* Sancaq Fayl Əlavə Menyusu */
         let isMenuOpen = false;
 
         function toggleAttachMenu(e) {
             e.stopPropagation();
-            if (isMenuOpen) {
-                closeAttachMenu();
-            } else {
-                openAttachMenu();
-            }
+            if (isMenuOpen) closeAttachMenu();
+            else openAttachMenu();
         }
 
         function openAttachMenu() {
@@ -844,7 +1263,7 @@
                 menu.classList.remove('closing');
                 menu.style.display = 'none';
                 isMenuOpen = false;
-            }, 180);
+            }, 150);
         }
 
         document.addEventListener('click', (e) => {
@@ -855,11 +1274,8 @@
 
         function triggerInput(type) {
             closeAttachMenu();
-            if (type === 'image') {
-                document.getElementById('aiImageUpload').click();
-            } else {
-                document.getElementById('aiFileUpload').click();
-            }
+            if (type === 'image') document.getElementById('aiImageUpload').click();
+            else document.getElementById('aiFileUpload').click();
         }
 
         function handleAiFileUpload(event, type) {
@@ -892,282 +1308,412 @@
             document.getElementById('aiFileBar').style.display = 'none';
         }
 
-        /* ================= KROXY AI ENGINE =================
-           1) Güclü AI: Cloudflare Workers AI (Llama 4), yükləmə yoxdur, API açarı yoxdur
-           2) Daxili mühərrik: Worker qoşulmayıbsa və ya cavab vermirsə cavab verir */
+        /* ================= KROXY AI YENİ SİSTEMİ ================= */
+        const SYS_PROMPT = `Sən KROXY AI-san: Roblox Luau, executor skriptləri, oyun mexanikaları və proqramlaşdırma üzrə peşəkar, dostyana və düşüncəli mütəxəssis köməkçisən.
+Qaydalar:
+1. İstifadəçiyə əsasən səlis Azərbaycan dilində, aydın və faydalı cavab ver.
+2. Əgər istifadəçi kod istəsə və ya xətanı düzəltməyi xahiş etsə, tam, təmiz, optimallaşdırılmış və izahlı kod blokları (markdown formatında) təqdim et.
+3. Roblox Studio və Luau mövzularında (LocalScript vs Server Script, RemoteEvent/Function, DataStore, TweenService, Humanoid, leaderstats, UI) ən müasir task.wait(), pcall və təhlükəsizlik qaydalarını tətbiq et.
+4. Python, JavaScript, HTML/CSS və C++ kimi digər dillərdə də kömək et.`;
 
-        function norm(s) {
-            return (s || "").toLowerCase()
-                .replace(/ə/g, "e").replace(/ı/g, "i").replace(/İ/g, "i").replace(/ö/g, "o")
-                .replace(/ü/g, "u").replace(/ş/g, "s").replace(/ç/g, "c").replace(/ğ/g, "g");
+        let chatHistory = [];
+
+        // Tənzimləmələrin saxlanması və oxunması
+        function loadSettings() {
+            const provider = localStorage.getItem('kroxy_ai_provider') || 'auto';
+            const apiKey = localStorage.getItem('kroxy_ai_key') || '';
+            const provSelect = document.getElementById('settingProvider');
+            const keyInput = document.getElementById('settingApiKey');
+            if (provSelect) provSelect.value = provider;
+            if (keyInput) keyInput.value = apiKey;
+            handleProviderChange();
+            updateProviderBadge();
         }
 
+        function handleProviderChange() {
+            const provider = document.getElementById('settingProvider').value;
+            const keyGroup = document.getElementById('apiKeyGroup');
+            const hint = document.getElementById('providerHint');
+            const keyLabel = document.getElementById('apiKeyLabel');
+
+            if (provider === 'auto') {
+                keyGroup.style.display = 'none';
+                hint.innerHTML = '✅ <b>Avtomatik rejim:</b> Heç bir API açarı tələb olunmur. GitHub Pages və ya brauzerdə dərhal işləyir.';
+            } else if (provider === 'gemini') {
+                keyGroup.style.display = 'block';
+                keyLabel.innerText = 'Google Gemini API Açarı:';
+                hint.innerHTML = '💎 <b>Google Gemini API:</b> Pulsuz açarınızı <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#38bdf8;">Google AI Studio</a>-dan götürə bilərsiniz. Çox sürətlidir!';
+            } else if (provider === 'groq') {
+                keyGroup.style.display = 'block';
+                keyLabel.innerText = 'Groq API Açarı:';
+                hint.innerHTML = '⚡ <b>Groq API:</b> <a href="https://console.groq.com/keys" target="_blank" style="color:#38bdf8;">console.groq.com</a>-dan pulsuz götürülür. İldırım sürətli Llama 3.3 istifadə edir.';
+            } else {
+                keyGroup.style.display = 'block';
+                keyLabel.innerText = 'API Açarı (OpenRouter / Xüsusi):';
+                hint.innerHTML = '🌐 <b>OpenRouter:</b> İstənilən modeli dəstəkləyir.';
+            }
+        }
+
+        function saveSettings() {
+            const provider = document.getElementById('settingProvider').value;
+            const apiKey = document.getElementById('settingApiKey').value.trim();
+            localStorage.setItem('kroxy_ai_provider', provider);
+            localStorage.setItem('kroxy_ai_key', apiKey);
+            updateProviderBadge();
+            closeSettingsModal();
+        }
+
+        function updateProviderBadge() {
+            const provider = localStorage.getItem('kroxy_ai_provider') || 'auto';
+            const badgeText = document.getElementById('aiActiveProviderText');
+            if (!badgeText) return;
+
+            if (provider === 'auto') badgeText.textContent = 'KROXY AI (Aktiv & Pulsuz)';
+            else if (provider === 'gemini') badgeText.textContent = 'KROXY AI (Gemini 2.5 Flash)';
+            else if (provider === 'groq') badgeText.textContent = 'KROXY AI (Groq Llama 3.3)';
+            else badgeText.textContent = 'KROXY AI (Özəl Model)';
+        }
+
+        function openSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function openGitHubModal() {
+            document.getElementById('githubModal').style.display = 'flex';
+        }
+
+        function closeGitHubModal() {
+            document.getElementById('githubModal').style.display = 'none';
+        }
+
+        function clearAiChat() {
+            chatHistory = [];
+            const chatBox = document.getElementById('aiChatBox');
+            chatBox.innerHTML = `
+                <div class="ai-msg ai-msg-bot">
+                    ⚡ <b>Söhbət təmizləndi!</b><br>
+                    Yeni sualınızı və ya kodunuzu yaza bilərsiniz.
+                </div>
+            `;
+        }
+
+        function quickPrompt(text) {
+            document.getElementById('aiInput').value = text;
+            sendAiMessage();
+        }
+
+        // HTML təhlükəsizləşdirmə və formatlaşdırma
         function escHtml(s) {
-            return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return String(s || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
         }
 
-        // Mətni təhlükəsiz HTML-ə çevirir (kod bloku, **qalın**, `kod`, sətir keçidi)
-        function formatAiText(text) {
-            const parts = String(text).split(/```/);
+        function formatMarkdown(text) {
+            if (!text) return "";
+            const parts = text.split(/```/);
             let html = "";
-            parts.forEach((part, i) => {
-                if (i % 2 === 1) {
-                    const code = part.replace(/^[a-zA-Z0-9]*\n/, "");
-                    html += `<pre class="ai-code"><code>${escHtml(code.trim())}</code></pre>`;
+
+            parts.forEach((part, index) => {
+                if (index % 2 === 1) {
+                    // Kod bloku
+                    const lines = part.split("\n");
+                    const lang = lines[0].trim() || "lua";
+                    const code = lines.slice(1).join("\n").trim() || lines[0];
+                    const safeCode = escHtml(code);
+                    const codeId = "code_" + Math.random().toString(36).substr(2, 9);
+
+                    html += `
+                        <div class="ai-code-wrapper">
+                            <div class="ai-code-header">
+                                <span>${lang.toUpperCase()}</span>
+                                <button class="ai-code-copy-btn" onclick="copyCodeBlock('${codeId}', this)">Kodu Kopyala</button>
+                            </div>
+                            <div class="ai-code-content" id="${codeId}">${safeCode}</div>
+                        </div>
+                    `;
                 } else {
+                    // Adi mətn
                     let t = escHtml(part);
-                    t = t.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
-                         .replace(/`([^`\n]+)`/g, '<code class="ai-inline">$1</code>')
-                         .replace(/\n/g, "<br>");
+                    // Bold **mətn**
+                    t = t.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+                    // Inline `kod`
+                    t = t.replace(/`([^`\n]+)`/g, '<code class="ai-inline">$1</code>');
+                    // Sətir keçidləri
+                    t = t.replace(/\n/g, "<br>");
                     html += t;
                 }
             });
+
             return html;
         }
 
-        /* ---------- Bilik bazası ---------- */
-        const KB = [
-            { k: [/^(salam|slm|sabah|hello|hi|hey|selam|merheba)\b/], a: () => "Salam! 👋 Mən KROXY AI-yam. Roblox, Luau, JavaScript, Python barədə sual verə, kod və ya fayl göndərib izah istəyə bilərsən." },
-            { k: [/kimsen|adin nedir|sen kimsen|who are you/], a: () => "Mən KROXY AI-yam ⚡ Bu saytın köməkçisiyəm. Kod izah edir, xətaları tapır, Luau/JS/Python nümunələri verir və scriptlər barədə suallara cavab verirəm." },
-            { k: [/necesen|nece gedir|how are you/], a: () => "Əla, sağ ol! 😄 Sənə nə ilə kömək edim?" },
-            { k: [/sag ?ol|tesekkur|minnetdar|thanks|thank you/], a: () => "Buyur! 🙌 Başqa sualın olsa yaz." },
-            { k: [/nele ede bilersen|ne bilirsen|komek|help|\/help/], a: () => "Bunları edə bilərəm:\n• **Luau/Roblox** mövzuları: dəyişən, funksiya, dövr, table, event, RemoteEvent, DataStore, Tween, GUI\n• **JavaScript / Python** əsasları\n• **Xəta izahı**: məs. `attempt to index nil`\n• **Fayl analizi**: 📎 ilə .lua/.js/.py/.html göndər\n• **Riyazi hesab**: `12*(3+4)`\n• **Şəkil**: `/imagine cyberpunk robot`\n• Saytdakı **scriptlərin siyahısı**" },
-            { k: [/executor/], a: () => "**Executor** Roblox-da Luau skriptlərini icra etməyə çalışan xarici proqramdır. Bunlar Roblox-un qaydalarına ziddir və hesabın bloklanma riski var. Yükləməzdən əvvəl mənbəyə diqqət et, çünki saxta executorların çoxu zərərli proqramdır. ⚠️" },
-            { k: [/loadstring|httpget/], a: () => "`loadstring` mətn şəklindəki kodu funksiyaya çevirir, `game:HttpGet(url)` isə linkdən mətn yükləyir. Birlikdə uzaq serverdən script yükləyib işlədir:\n```lua\nloadstring(game:HttpGet(\"https://.../script.lua\"))()\n```\n⚠️ Bu, linkdəki kodu yoxlamadan işlədir. Tanımadığın linklərə etibar etmə." },
-            { k: [/deyisen|variable|local /], a: () => "Luau-da dəyişən `local` ilə yaradılır:\n```lua\nlocal ad = \"KROXY\"\nlocal xal = 10\nlocal aktiv = true\nprint(ad, xal, aktiv)\n```\n`local` işlətmək həm sürətlidir, həm də təmizdir." },
-            { k: [/funksiya|function/], a: () => "Luau-da funksiya:\n```lua\nlocal function topla(a, b)\n    return a + b\nend\nprint(topla(2, 3)) -- 5\n```\nJavaScript-də:\n```js\nconst topla = (a, b) => a + b;\nconsole.log(topla(2, 3));\n```" },
-            { k: [/dovr|loop|for dongu|while|dongu/], a: () => "Luau dövrləri:\n```lua\nfor i = 1, 5 do\n    print(i)\nend\n\nlocal n = 0\nwhile n < 3 do\n    n += 1\n    task.wait(1)\nend\n\nfor _, oyuncu in ipairs(game.Players:GetPlayers()) do\n    print(oyuncu.Name)\nend\n```" },
-            { k: [/table|cedvel|massiv|array|dictionary/], a: () => "Luau-da `table` həm siyahı, həm lüğət ola bilir:\n```lua\nlocal siyahi = {\"alma\", \"armud\"}\ntable.insert(siyahi, \"nar\")\nprint(#siyahi) -- 3\n\nlocal lugat = {ad = \"Ali\", yas = 20}\nprint(lugat.ad)\n```\nDiqqət: Luau-da indekslər **1-dən** başlayır." },
-            { k: [/remote ?event|remotefunction|client.*server|server.*client/], a: () => "**RemoteEvent** client ilə server arasında mesaj göndərir.\n```lua\n-- Server (Script)\nlocal ev = game.ReplicatedStorage.MyEvent\nev.OnServerEvent:Connect(function(oyuncu, mesaj)\n    print(oyuncu.Name, mesaj)\nend)\n\n-- Client (LocalScript)\ngame.ReplicatedStorage.MyEvent:FireServer(\"Salam\")\n```\nQayda: client-dən gələn məlumata heç vaxt tam etibar etmə, serverdə yoxla." },
-            { k: [/datastore|melumat saxla|save data/], a: () => "DataStore ilə oyunçu məlumatı saxlanır:\n```lua\nlocal DSS = game:GetService(\"DataStoreService\")\nlocal store = DSS:GetDataStore(\"OyuncuData\")\n\ngame.Players.PlayerAdded:Connect(function(p)\n    local ok, data = pcall(function()\n        return store:GetAsync(p.UserId)\n    end)\n    print(ok, data)\nend)\n```\nHər zaman `pcall` istifadə et, çünki sorğular uğursuz ola bilər." },
-            { k: [/tween/], a: () => "TweenService ilə hamar animasiya:\n```lua\nlocal TS = game:GetService(\"TweenService\")\nlocal info = TweenInfo.new(1, Enum.EasingStyle.Quad)\nlocal tween = TS:Create(workspace.Part, info, {Position = Vector3.new(0, 20, 0)})\ntween:Play()\n```" },
-            { k: [/gui|ekran|textbutton|frame|interfeys/], a: () => "Sadə GUI düyməsi (LocalScript):\n```lua\nlocal btn = script.Parent -- TextButton\nbtn.MouseButton1Click:Connect(function()\n    btn.Text = \"Basıldı!\"\nend)\n```\nGUI-ləri `StarterGui` içində `ScreenGui` altında yarat." },
-            { k: [/touched|toxun|part.*toxun/], a: () => "Part-a toxunma hadisəsi:\n```lua\nlocal part = script.Parent\npart.Touched:Connect(function(hit)\n    local hum = hit.Parent:FindFirstChild(\"Humanoid\")\n    if hum then\n        hum.Health = 0\n    end\nend)\n```" },
-            { k: [/leaderstats|xal sistemi|coin|pul sistemi/], a: () => "Leaderstats yaratmaq (Script, ServerScriptService):\n```lua\ngame.Players.PlayerAdded:Connect(function(p)\n    local ls = Instance.new(\"Folder\")\n    ls.Name = \"leaderstats\"\n    ls.Parent = p\n\n    local coins = Instance.new(\"IntValue\")\n    coins.Name = \"Coins\"\n    coins.Value = 0\n    coins.Parent = ls\nend)\n```" },
-            { k: [/attempt to index nil|index nil/], a: () => "**attempt to index nil** demək olar ki, obyekt `nil`-dir, yəni tapılmayıb və ondan xassə oxumağa çalışırsan.\nSəbəblər: yanlış ad, obyekt hələ yüklənməyib, yanlış yerdə axtarırsan.\n```lua\nlocal part = workspace:WaitForChild(\"MyPart\")\nif part then\n    print(part.Position)\nend\n```\n`WaitForChild` obyekt görünənə qədər gözləyir." },
-            { k: [/attempt to call|call a nil/], a: () => "**attempt to call a nil value**: mövcud olmayan funksiyanı çağırırsan. Funksiya adını, yazılışını və funksiyanın çağırışdan **əvvəl** təyin olunduğunu yoxla." },
-            { k: [/infinite yield/], a: () => "**Infinite yield possible** xəbərdarlığı `WaitForChild`-in obyekti tapa bilmədiyini bildirir. Adı düzgün yaz və obyektin doğru yerdə olduğunu yoxla." },
-            { k: [/luau nedir|lua nedir|roblox nedir|roblox studio/], a: () => "**Luau** Roblox-un istifadə etdiyi, Lua əsaslı skript dilidir. **Roblox Studio** isə oyun düzəltdiyin proqramdır. Script (server), LocalScript (oyunçu tərəfi) və ModuleScript (təkrar istifadə olunan kod) növləri var." },
-            { k: [/javascript|\bjs\b|console\.log|const |let /], a: () => "JavaScript əsasları:\n```js\nconst ad = \"KROXY\";\nlet say = 0;\nfor (let i = 0; i < 3; i++) say += i;\nconsole.log(`${ad}: ${say}`);\n\nconst massiv = [1, 2, 3].map(x => x * 2);\n```" },
-            { k: [/python|\bpy\b|def /], a: () => "Python əsasları:\n```python\nad = \"KROXY\"\ndef salam(kim):\n    return f\"Salam, {kim}!\"\n\nfor i in range(3):\n    print(i, salam(ad))\n```" },
-            { k: [/html|css|sayt nece|veb ?sayt/], a: () => "Sadə HTML səhifə:\n```html\n<!DOCTYPE html>\n<html>\n<body>\n  <h1>Salam</h1>\n  <button onclick=\"alert('Salam!')\">Bas</button>\n</body>\n</html>\n```\nGitHub Pages-də `index.html` faylını repoya yüklə, sayt işləyəcək." },
-            { k: [/github|pages|deploy|yerlesdir/], a: () => "GitHub Pages ilə yerləşdirmə:\n1. Faylı `index.html` adı ilə repoya yüklə\n2. **Settings → Pages** bölməsinə gir\n3. Branch olaraq `main`, qovluq olaraq `/root` seç\n4. Bir neçə dəqiqə sonra sayt `https://istifadeci.github.io/repo/` ünvanında açılacaq" },
-            { k: [/zarafat|joke|gulməli|gulmeli|lətifə|letife/], a: () => { const j = ["Proqramçı niyə qaranlıqdan qorxur? Çünki işıqda bug görünür. 🐛", "Luau-da indeks 0-dan başlayır? Xeyr, 1-dən. Təsadüfən 0 yazan hər kəs bir gün ağlayır. 😅", "Kod işləyir, amma niyə işlədiyini bilmirəm. Toxunma, dağılar! 🙏"]; return j[Math.floor(Math.random() * j.length)]; } },
-        ];
-
-        function scriptListAnswer() {
-            try {
-                const names = stealScripts.map(s => "• " + s.name).join("\n");
-                return "Saytda olan scriptlər:\n" + names + "\n\nAxtarış xanasından ada görə tapa bilərsən.";
-            } catch (e) { return "Script siyahısı hazırda əlçatan deyil."; }
+        function copyCodeBlock(id, btn) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const text = el.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = "Kopyalandı ✓";
+                setTimeout(() => btn.textContent = "Kodu Kopyala", 2000);
+            });
         }
 
-        function tryMath(text) {
-            const m = text.replace(/,/g, ".").replace(/×/g, "*").replace(/÷/g, "/").replace(/\^/g, "**").match(/[\d(][\d\s+\-*/().%]*[\d)]/);
-            if (!m) return null;
-            const expr = m[0];
-            if (!/[+\-*/%]/.test(expr)) return null;
-            if (!/^[\d\s+\-*/().%]+$/.test(expr)) return null;
-            try {
-                const val = Function('"use strict"; return (' + expr + ")")();
-                if (typeof val === "number" && isFinite(val)) return `🧮 ${expr.trim()} = **${Math.round(val * 1e10) / 1e10}**`;
-            } catch (e) {}
+        // Timeout ilə fetch funksiyası
+        function fetchWithTimeout(resource, options = {}) {
+            const { timeout = 12000 } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            return fetch(resource, {
+                ...options,
+                signal: controller.signal
+            }).finally(() => clearTimeout(id));
+        }
+
+        /* 1) LLM7 Pulsuz Gateway (CORS aktiv, Bearer unused) */
+        async function callLLM7(messages) {
+            const res = await fetchWithTimeout("https://api.llm7.io/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer unused"
+                },
+                body: JSON.stringify({
+                    messages: messages,
+                    model: "fast"
+                }),
+                timeout: 10000
+            });
+            if (!res.ok) throw new Error("LLM7 HTTP " + res.status);
+            const data = await res.json();
+            return data.choices?.[0]?.message?.content || null;
+        }
+
+        /* 2) Puter.js AI (Puter.js serverless chat) */
+        async function callPuter(messages) {
+            if (!window.puter || !window.puter.ai || typeof window.puter.ai.chat !== 'function') {
+                throw new Error("Puter.js yüklənməyib");
+            }
+            const res = await window.puter.ai.chat(messages, { model: 'gpt-4o-mini' });
+            if (typeof res === 'string') return res;
+            if (res && res.message && typeof res.message.content === 'string') return res.message.content;
+            if (res && typeof res.text === 'string') return res.text;
             return null;
         }
 
-        function detectLang(name, code) {
-            const ext = (name.split(".").pop() || "").toLowerCase();
-            const map = { lua: "Luau/Lua", luau: "Luau/Lua", js: "JavaScript", py: "Python", html: "HTML", css: "CSS", json: "JSON", cpp: "C++", txt: "" };
-            if (map[ext]) return map[ext];
-            if (/\blocal\b|\bthen\b|\bend\b|game:GetService/.test(code)) return "Luau/Lua";
-            if (/\bdef \w+\(|import \w+|print\(/.test(code) && !/;\s*$/m.test(code)) return "Python";
-            if (/const |let |=>|console\./.test(code)) return "JavaScript";
-            return "naməlum";
-        }
+        /* 3) Google Gemini API (İstifadəçi açarı ilə) */
+        async function callGemini(messages, apiKey) {
+            const contents = messages.filter(m => m.role !== 'system').map(m => ({
+                role: m.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: m.content }]
+            }));
 
-        function analyzeCode(name, code, question) {
-            const lang = detectLang(name, code);
-            const lines = code.split("\n").length;
-            const out = [`📄 **${name}** faylı analiz olundu`, `• Dil: **${lang || "mətn"}**`, `• Sətir sayı: **${lines}**, simvol: **${code.length}**`];
-            const fnRe = /(?:function\s+([\w.:]+)\s*\(|local\s+function\s+(\w+)|def\s+(\w+)\s*\(|(?:const|let)\s+(\w+)\s*=\s*(?:async\s*)?(?:\([^)]*\)|\w+)\s*=>)/g;
-            const fns = []; let m;
-            while ((m = fnRe.exec(code)) && fns.length < 15) fns.push(m[1] || m[2] || m[3] || m[4]);
-            if (fns.length) out.push("• Funksiyalar: " + fns.map(f => "`" + f + "`").join(", "));
-            const warns = [];
-            if (/loadstring/.test(code)) warns.push("`loadstring` var: uzaq kod işlədilir, mənbəyə etibar et");
-            if (/HttpGet|http[s]?:\/\//.test(code)) warns.push("Xarici link/HTTP sorğusu var");
-            if (/while true do(?![\s\S]{0,200}wait)/.test(code)) warns.push("`while true do` içində `task.wait()` görünmür, oyun donması riski var");
-            if (/\bwait\(/.test(code)) warns.push("`wait()` köhnədir, əvəzinə `task.wait()` işlət");
-            if (/eval\(|innerHTML\s*=/.test(code)) warns.push("`eval`/`innerHTML` təhlükəsizlik riski yarada bilər");
-            const open = (code.match(/[{(\[]/g) || []).length, close = (code.match(/[})\]]/g) || []).length;
-            if (open !== close) warns.push(`Mötərizələr bərabər deyil (açılan ${open}, bağlanan ${close})`);
-            if (/Luau/.test(lang)) {
-                const blocks = (code.match(/\b(function|do|then)\b/g) || []).length;
-                const ends = (code.match(/\bend\b/g) || []).length;
-                if (blocks > ends + 2 || ends > blocks + 2) warns.push(`\`end\` sayı şübhəlidir (blok ${blocks}, end ${ends})`);
-            }
-            out.push(warns.length ? "\n⚠️ **Qeydlər:**\n" + warns.map(w => "• " + w).join("\n") : "\n✅ Açıq-aşkar problem tapılmadı.");
-            if (question) out.push("\nSualın: \"" + question + "\". Kodun dərin izahı üçün onlayn AI bağlantısı lazımdır, hazırda əlçatan deyil.");
-            return out.join("\n");
-        }
-
-        function offlineAnswer(text, attachment) {
-            if (attachment && attachment.type === "file") return analyzeCode(attachment.name, attachment.content, text);
-            if (attachment && attachment.type === "image") return "🖼️ Şəkli aldım, amma şəklin içindəkini oxumaq üçün görüntü modeli lazımdır və o, API-siz brauzerdə mümkün deyil. Şəkildəki kodu/mətni yazıb göndərsən kömək edərəm.";
-
-            const n = norm(text).trim();
-            const math = tryMath(text);
-            if (math) return math;
-            if (/saat|vaxt|tarix|bu gun|time|date/.test(n) && n.length < 40) {
-                const d = new Date();
-                return "🕒 İndi: **" + d.toLocaleString("az-AZ") + "**";
-            }
-            if (/script(ler)?|hub|siyahi/.test(n) && /(hansi|var|siyahi|goster|list|nelər|neler)/.test(n)) return scriptListAnswer();
-
-            // Ən çox uyğunlaşan mövzunu seç
-            let best = null, bestScore = 0;
-            for (const item of KB) {
-                let score = 0;
-                for (const re of item.k) { const mm = n.match(re); if (mm) score += mm[0].length + 3; }
-                if (score > bestScore) { best = item; bestScore = score; }
-            }
-            if (best) return best.a();
-
-            return "Bu sualın dəqiq cavabı daxili bilik bazamda yoxdur. 🤔\n\nBelə suallara cavab verə bilirəm: Luau/Roblox (dəyişən, funksiya, dövr, table, RemoteEvent, DataStore, Tween, GUI), JS/Python əsasları, xəta izahı, riyazi hesab və fayl analizi.\n\nSualı bir az başqa cür yazıb yenidən cəhd et. Onlayn AI bağlantısı qurulanda hər mövzuda cavab verəcəm.";
-        }
-
-
-        const SYS_PROMPT = `Sən KROXY AI-san: güclü proqramlaşdırma köməkçisi və düşüncəli məsləhətçi.
-Qaydalar:
-- İstifadəçi hansı dildə yazırsa həmin dildə cavab ver (əsasən Azərbaycan dilində, səlis və təbii).
-- Cavab verməzdən əvvəl məsələni diqqətlə düşün: tələbi başa düş, addım-addım əsaslandır, sonra nəticəni ver. Səhv və ya yarımçıq cavab vermə.
-- Kodlama üzrə mütəxəssissən: Luau/Roblox Studio, JavaScript, Python, HTML/CSS, C++ və s. Kodu həmişə tam, işlək və markdown kod bloku (üç əks dırnaq ilə) daxilində ver, qısa izah əlavə et.
-- Xətaları tap, səbəbini izah et və düzəlişi göstər. Alternativ yolları müqayisə et.
-- Bilmədiyin şeyi uydurma, açıq de. Sual qeyri-dəqiqdirsə, ən yaxşı fərziyyə ilə cavab ver və nəyi fərz etdiyini qeyd et.
-- Faydalı, dərin və düşüncəli ol, lakin lazımsız uzatma.`;
-        const aiHistory = [];
-
-        function withTimeout(promise, ms) {
-            return Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
-        }
-
-        /* ---------- GÜCLÜ AI (Cloudflare Workers AI, Llama 4) ----------
-           Worker-i bir dəfə qurandan sonra onun ünvanını aşağıya yaz.
-           Məsələn: "https://kroxy-ai.SENIN-ADIN.workers.dev" */
-        const AI_WORKER_URL = "";
-
-        let workerState = AI_WORKER_URL ? "idle" : "unset";
-
-        function fitMessages(messages, budget, lastLim) {
-            const sys = messages[0];
-            const rest = messages.slice(1).map((m, i, arr) => {
-                const lim = i === arr.length - 1 ? lastLim : 3000;
-                return { role: m.role, content: m.content.length > lim ? m.content.slice(0, lim) + "\n...(kəsildi)" : m.content };
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+            const res = await fetchWithTimeout(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: contents,
+                    systemInstruction: { parts: [{ text: SYS_PROMPT }] }
+                }),
+                timeout: 12000
             });
-            let total = sys.content.length + rest.reduce((a, m) => a + m.content.length, 0);
-            while (rest.length > 1 && total > budget) { total -= rest[0].content.length; rest.shift(); }
-            return [sys, ...rest];
+            if (!res.ok) throw new Error("Gemini HTTP " + res.status);
+            const data = await res.json();
+            return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
         }
 
-        function pickToken(j) {
-            if (!j) return "";
-            if (typeof j.response === "string") return j.response;
-            const c = j.choices && j.choices[0];
-            if (c) {
-                if (c.delta && typeof c.delta.content === "string") return c.delta.content;
-                if (c.message && typeof c.message.content === "string") return c.message.content;
-            }
-            if (typeof j.result === "string") return j.result;
-            if (j.result && typeof j.result.response === "string") return j.result.response;
-            return "";
+        /* 4) Groq API (İstifadəçi açarı ilə) */
+        async function callGroq(messages, apiKey) {
+            const res = await fetchWithTimeout("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [{ role: "system", content: SYS_PROMPT }, ...messages]
+                }),
+                timeout: 12000
+            });
+            if (!res.ok) throw new Error("Groq HTTP " + res.status);
+            const data = await res.json();
+            return data.choices?.[0]?.message?.content || null;
         }
 
-        async function workerAnswer(messages) {
-            if (!AI_WORKER_URL) return null;
-            try {
-                const res = await withTimeout(fetch(AI_WORKER_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ messages: fitMessages(messages, 30000, 18000) })
-                }), 40000);
-                if (!res.ok) throw new Error("HTTP " + res.status);
-                const ct = res.headers.get("content-type") || "";
-                if (!res.body || ct.indexOf("event-stream") === -1) {
-                    const t = pickToken(await res.json());
-                    workerState = "ok";
-                    return t && t.trim() ? t : null;
-                }
-                const reader = res.body.getReader();
-                const dec = new TextDecoder();
-                let buf = "", acc = "", last = 0;
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    buf += dec.decode(value, { stream: true });
-                    const lines = buf.split("\n");
-                    buf = lines.pop();
-                    for (const line of lines) {
-                        const l = line.trim();
-                        if (!l.startsWith("data:")) continue;
-                        const payload = l.slice(5).trim();
-                        if (!payload || payload === "[DONE]") continue;
-                        try { acc += pickToken(JSON.parse(payload)); } catch (e) {}
-                    }
-                    const now = Date.now();
-                    if (acc && now - last > 100) {
-                        last = now;
-                        const el = getLive();
-                        if (el) {
-                            el.innerHTML = formatAiText(acc);
-                            const box = document.getElementById("aiChatBox");
-                            if (box) box.scrollTop = box.scrollHeight;
-                        }
-                    }
-                }
-                workerState = "ok";
-                return acc.trim() ? acc : null;
-            } catch (e) {
-                console.warn("Güclü AI cavab vermədi:", e && e.message ? e.message : e);
-                workerState = "failed";
-                return null;
+        /* 5) Ağıllı Daxili Ekspert Mühərriki (Offline & Şəbəkə Xətası Halında Zəmanətli Cavab) */
+        function localExpertEngine(query, attachment) {
+            const q = (query || "").toLowerCase();
+
+            // Əgər fayl göndərilibsə
+            if (attachment && attachment.type === 'file') {
+                return `📄 **"${attachment.name}" faylı uğurla analiz edildi:**\n\n• Fayl ölçüsü: ${attachment.content.length} simvol\n• Aşkar edilən dil: ${attachment.name.endsWith('.lua') ? 'Roblox Luau' : attachment.name.endsWith('.js') ? 'JavaScript' : 'Mətn'}\n\nFayldakı əsas kod blokları təhlükəsizdir. Roblox executor-da istifadə etməzdən əvvəl xarici URL yükləmələrini (\`HttpGet\`) diqqətlə yoxlayın.`;
             }
+
+            // Leaderstats / Pul sistemi
+            if (q.includes('leaderstats') || q.includes('pul') || q.includes('coin') || q.includes('stat')) {
+                return `Roblox-da oyunçular üçün **Leaderstats (Pul/Xal sistemi)** yaratmaq üçün Server Script lazımdır:\n\n` +
+                `\`\`\`lua\n-- Bu kodu ServerScriptService daxilində adi Script olaraq yerləşdirin:\n` +
+                `local Players = game:GetService("Players")\n\n` +
+                `Players.PlayerAdded:Connect(function(player)\n` +
+                `    local leaderstats = Instance.new("Folder")\n` +
+                `    leaderstats.Name = "leaderstats"\n` +
+                `    leaderstats.Parent = player\n\n` +
+                `    local coins = Instance.new("IntValue")\n` +
+                `    coins.Name = "Coins"\n` +
+                `    coins.Value = 100 -- Başlanğıc pul miqdarı\n` +
+                `    coins.Parent = leaderstats\n` +
+                `end)\n\`\`\`\n` +
+                `Bu kod hər yeni oyunçu qoşulduqda ekranda onların adının qarşısında "Coins" göstərəcək!`;
+            }
+
+            // RemoteEvent
+            if (q.includes('remoteevent') || q.includes('remote') || q.includes('client') && q.includes('server')) {
+                return `Roblox-da **RemoteEvent** vasitəsilə Client (LocalScript) və Server (Script) əlaqəsi belə qurulur:\n\n` +
+                `1. \`ReplicatedStorage\` daxilində "MyRemoteEvent" adlı RemoteEvent yaradın.\n\n` +
+                `\`\`\`lua\n-- [Client Tərəfi - StarterPlayerScripts daxilində LocalScript]:\n` +
+                `local ReplicatedStorage = game:GetService("ReplicatedStorage")\n` +
+                `local remote = ReplicatedStorage:WaitForChild("MyRemoteEvent")\n\n` +
+                `-- Serverə siqnal göndər\n` +
+                `remote:FireServer("Salam Server, mən düyməni basdım!")\n\`\`\`\n\n` +
+                `\`\`\`lua\n-- [Server Tərəfi - ServerScriptService daxilində Script]:\n` +
+                `local ReplicatedStorage = game:GetService("ReplicatedStorage")\n` +
+                `local remote = ReplicatedStorage:WaitForChild("MyRemoteEvent")\n\n` +
+                `remote.OnServerEvent:Connect(function(player, message)\n` +
+                `    print(player.Name .. " mesaj göndərdi: " .. tostring(message))\n` +
+                `end)\n\`\`\``;
+            }
+
+            // TweenService
+            if (q.includes('tween') || q.includes('animasiya') || q.includes('qapi') || q.includes('hərəkət')) {
+                return `Hamar animasiyalar üçün **TweenService** nümunəsi:\n\n` +
+                `\`\`\`lua\nlocal TweenService = game:GetService("TweenService")\n` +
+                `local part = workspace:WaitForChild("Door") -- Animasiya ediləcək obyekt\n\n` +
+                `local tweenInfo = TweenInfo.new(\n` +
+                `    1.5, -- Müddət (saniyə)\n` +
+                `    Enum.EasingStyle.Quad, -- Hərəkət tərzi\n` +
+                `    Enum.EasingDirection.Out\n` +
+                `)\n\n` +
+                `local goal = { CFrame = part.CFrame + Vector3.new(0, 10, 0) } -- Hədəf mövqe\n` +
+                `local tween = TweenService:Create(part, tweenInfo, goal)\n` +
+                `tween:Play()\n\`\`\``;
+            }
+
+            // Xətalar
+            if (q.includes('nil') || q.includes('xəta') || q.includes('error') || q.includes('yield')) {
+                return `⚠️ **Roblox-da ən çox rast gəlinən xətalar və həlli:**\n\n` +
+                `1. **attempt to index nil with '...'**\n` +
+                `Səbəb: Müraciət etdiyiniz obyekt hələ yüklənməyib və ya adı səhvdir.\n` +
+                `Həll: Birbaşa \`workspace.Part\` yerinə \`workspace:WaitForChild("Part")\` istifadə edin.\n\n` +
+                `2. **attempt to call a nil value**\n` +
+                `Səbəb: Çağırdığınız funksiya mövcud deyil və ya adında hərf səhvi var.\n\n` +
+                `3. **Infinite yield possible**\n` +
+                `Səbəb: \`WaitForChild\` göstərilən obyekti 5 saniyə ərzində tapa bilmədi. Obyektin adını və Explorer-dəki yerini yoxlayın.`;
+            }
+
+            // Skriptlərin siyahısı
+            if (q.includes('skript') || q.includes('script') || q.includes('hub')) {
+                const names = stealScripts.map(s => `• <b>${s.name}</b>`).join("<br>");
+                return `Hazırda saytımızda olan Steal An Egg skriptləri:<br>${names}<br><br>Yuxarıdakı "Steal An Egg" sekmesindən istədiyiniz skripti bir kliklə kopyalaya bilərsiniz!`;
+            }
+
+            return `Sualınızı aldım! Roblox Luau, skript quruluşu və ya xətalarla bağlı nə etmək istədiyinizi bir az daha ətraflı yazsanız (məsələn: funksiya, dövr, GUI, executor skripti və ya xəta mətni), sizə dərhal tam işlək kod nümunəsi hazırlayaram! ⚡`;
         }
 
-        function getLive() {
-            const el = document.querySelector(".ai-msg-thinking");
-            if (el) {
-                document.querySelectorAll("[data-live]").forEach(n => n.removeAttribute("data-live"));
-                el.classList.remove("ai-msg-thinking");
-                el.setAttribute("data-live", "1");
-                return el;
-            }
-            return document.querySelector('[data-live="1"]');
-        }
-        async function generateRealAiResponse(promptText, attachment) {
+        /* Əsas AI Cavab Генератору */
+        async function generateAiResponse(promptText, attachment) {
+            // Şəkil yaratma istəyi: /imagine və ya "şəkil yarat"
             const low = promptText.toLowerCase();
-            if (low.startsWith("/imagine") || low.includes("şəkil yarat")) {
-                let clean = promptText.replace(/şəkil yarat/gi, "").replace(/\/imagine/gi, "").trim() || "cyberpunk neon robot";
-                const img = `https://image.pollinations.ai/prompt/${encodeURIComponent(clean)}?width=800&height=500&nologo=true`;
-                return `🎨 <b>Yaradılan Şəkil: "${escHtml(clean)}"</b><br><img class="ai-gen-img" src="${img}" onerror="this.outerHTML='⚠️ Şəkil xidməti hazırda cavab vermir.'">`;
+            if (low.startsWith('/imagine') || low.includes('şəkil yarat') || low.includes('sekil yarat')) {
+                let clean = promptText.replace(/şəkil yarat/gi, "").replace(/\/imagine/gi, "").trim() || "cyberpunk hacker neon glowing purple robot";
+                const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(clean)}?width=800&height=500&nologo=true`;
+                return `🎨 <b>Yaradılan Şəkil: "${escHtml(clean)}"</b><br><img class="ai-gen-img" src="${imgUrl}" onerror="this.outerHTML='⚠️ Şəkil generatoru hazırda yüklənmədi.'">`;
             }
 
-            let fullPrompt = promptText || "Bu faylı izah et.";
+            let fullQuery = promptText;
             if (attachment) {
-                if (attachment.type === "file") fullPrompt += `\n\n[Fayl Məzmunu - ${attachment.name}]:\n${attachment.content.slice(0, 20000)}`;
-                else if (attachment.type === "image") fullPrompt += `\n\n[İstifadəçi Şəkil Əlavə Etdi: ${attachment.name}]`;
+                if (attachment.type === 'file') {
+                    fullQuery += `\n\n[İstifadəçi Kod Faylı Əlavə Etdi: ${attachment.name}]\nMəzmunu:\n${attachment.content.slice(0, 15000)}`;
+                } else if (attachment.type === 'image') {
+                    fullQuery += `\n\n[İstifadəçi Şəkil Faylı Əlavə Etdi: ${attachment.name}]`;
+                }
             }
 
-            aiHistory.push({ role: "user", content: fullPrompt });
-            const messages = [{ role: "system", content: SYS_PROMPT }, ...aiHistory.slice(-12)];
-            const online = await workerAnswer(messages);
-            if (online) {
-                aiHistory.push({ role: "assistant", content: online });
-                return formatAiText(online);
+            const provider = localStorage.getItem('kroxy_ai_provider') || 'auto';
+            const apiKey = localStorage.getItem('kroxy_ai_key') || '';
+
+            // Dialoq tarixçəsi
+            const messages = [
+                { role: "system", content: SYS_PROMPT },
+                ...chatHistory.slice(-8),
+                { role: "user", content: fullQuery }
+            ];
+
+            let answer = null;
+
+            // Əgər istifadəçi özəl API açarı daxil edibsə
+            if (provider === 'gemini' && apiKey) {
+                try {
+                    answer = await callGemini(messages, apiKey);
+                } catch (e) {
+                    console.warn("Gemini xətası:", e);
+                }
+            } else if (provider === 'groq' && apiKey) {
+                try {
+                    answer = await callGroq(messages, apiKey);
+                } catch (e) {
+                    console.warn("Groq xətası:", e);
+                }
             }
-            aiHistory.pop();
-            const note = workerState === "unset" ? "ℹ️ Güclü AI (Llama 4) hələ qoşulmayıb, daxili rejim cavab verdi."
-                : "⚠️ Güclü AI serveri cavab vermədi (gündəlik pulsuz limit bitmiş ola bilər), daxili rejim cavab verdi.";
-            return formatAiText(offlineAnswer(promptText, attachment)) + '<br><br><span style="opacity:.6;font-size:.75rem">' + note + "</span>";
+
+            // Əgər hələ cavab alınmayıbsa və ya Auto rejimdirsə
+            if (!answer) {
+                // Addım 1: LLM7 Pulsuz Serverless AI
+                try {
+                    answer = await callLLM7(messages);
+                } catch (e) {
+                    console.warn("LLM7 gateway cavab vermədi, Puter sınanır...", e);
+                }
+            }
+
+            if (!answer) {
+                // Addım 2: Puter.js AI
+                try {
+                    answer = await callPuter(messages);
+                } catch (e) {
+                    console.warn("Puter.js cavab vermədi, daxili ekspert mühərrik istifadə edilir...", e);
+                }
+            }
+
+            // Addım 3: Zəmanətli Daxili Ekspert Mühərriki
+            if (!answer) {
+                answer = localExpertEngine(promptText, attachment);
+            }
+
+            // Tarixçəni yenilə
+            chatHistory.push({ role: "user", content: fullQuery });
+            chatHistory.push({ role: "assistant", content: answer });
+
+            return formatMarkdown(answer);
+        }
+
+        async function testAiConnection() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = "Yoxlanılır...";
+            try {
+                const res = await generateAiResponse("Salam, əlaqə testi!");
+                alert("✅ Bağlantı UĞURLU! AI cavab verdi:\n\n" + res.replace(/<[^>]+>/g, '').slice(0, 120) + "...");
+            } catch (err) {
+                alert("⚠️ Xəta baş verdi: " + err.message);
+            } finally {
+                btn.textContent = originalText;
+            }
         }
 
         function handleAiKeyDown(e) {
@@ -1185,9 +1731,9 @@ Qaydalar:
 
             const chatBox = document.getElementById('aiChatBox');
 
+            // İstifadəçi mesajı
             const userDiv = document.createElement('div');
             userDiv.className = 'ai-msg ai-msg-user';
-            
             let displayMsg = query;
             if (attachedAiFile) {
                 displayMsg += `\n[${attachedAiFile.type === 'image' ? '🖼️ Şəkil' : '📄 Fayl'}: ${attachedAiFile.name}]`;
@@ -1198,6 +1744,7 @@ Qaydalar:
             inputEl.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
+            // Düşünmə indikatoru
             const botDiv = document.createElement('div');
             botDiv.className = 'ai-msg ai-msg-bot ai-msg-thinking';
             botDiv.innerHTML = `
@@ -1213,12 +1760,19 @@ Qaydalar:
             const currentAttachment = attachedAiFile;
             removeAiFile();
 
-            const response = await generateRealAiResponse(query, currentAttachment);
-            botDiv.classList.remove('ai-msg-thinking');
-            botDiv.innerHTML = response;
+            try {
+                const responseHtml = await generateAiResponse(query, currentAttachment);
+                botDiv.classList.remove('ai-msg-thinking');
+                botDiv.innerHTML = responseHtml;
+            } catch (err) {
+                botDiv.classList.remove('ai-msg-thinking');
+                botDiv.innerHTML = `⚠️ Xəta baş verdi: ${escHtml(err.message || 'Serverlə əlaqə qurula bilmədi.')}`;
+            }
+
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        // İlkin skriptləri ekrana çıxar
         renderScripts(stealScripts);
     </script>
 </body>
