@@ -468,7 +468,7 @@
 
         @keyframes messageSlide {
             from { opacity: 0; transform: translateY(10px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .ai-msg-user {
@@ -991,7 +991,7 @@
                         Təmizlə
                     </button>
                     <button class="ai-ctrl-btn" onclick="openSettingsModal()" title="AI Tənzimləmələri və Model Seçimi">
-                        <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        <svg class="k-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                         Tənzimləmələr
                     </button>
                 </div>
@@ -1407,7 +1407,7 @@ Məqsədin:
         }
 
         function fetchWithTimeout(resource, options = {}) {
-            const { timeout = 14000 } = options;
+            const { timeout = 35000 } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
             return fetch(resource, {
@@ -1425,10 +1425,10 @@ Məqsədin:
                 },
                 body: JSON.stringify({
                     messages: messages,
-                    model: "fast",
-                    temperature: 0.6
+                    model: "default",
+                    temperature: 0.7
                 }),
-                timeout: 13000
+                timeout: 35000
             });
             if (!res.ok) throw new Error("AI Gateway HTTP " + res.status);
             const data = await res.json();
@@ -1497,7 +1497,27 @@ Məqsədin:
                 return `⚠️ **Roblox-da ən çox rast gəlinən xətalar və həlli:**\n\n1. **attempt to index nil with '...'**\n• Səbəb: Obyekt hələ yüklənməyib və ya tapılmayıb.\n• Düzəliş: \`workspace:WaitForChild("ObyektAdi")\` istifadə edin.\n\n2. **attempt to call a nil value**\n• Səbəb: Funksiya çağırışdan əvvəl təyin olunmayıb və ya adında hərf səhvi var.`;
             }
 
-            return `Sualınızı və tələbinizi dəqiq başa düşdüm. Roblox Luau, executor skriptləri, oyun mexanikaları, Python və ya JavaScript üzrə hansı sistemi qurmaq istədiyinizi bir az daha ətraflı yazın, sizə ən optimal və tam işlək kodu dərhal təqdim edim! ⚡`;
+            if (q.includes('fly') || q.includes('uç') || q.includes('uc')) {
+                return `Roblox-da **Uçuş (Fly)** skripti (LocalScript):\n\n\`\`\`lua\nlocal Players = game:GetService("Players")\nlocal UIS = game:GetService("UserInputService")\nlocal player = Players.LocalPlayer\nlocal char = player.Character or player.CharacterAdded:Wait()\nlocal hrp = char:WaitForChild("HumanoidRootPart")\nlocal hum = char:WaitForChild("Humanoid")\n\nlocal flying = false\nlocal speed = 60\n\nUIS.InputBegan:Connect(function(input, gpe)\n    if gpe then return end\n    if input.KeyCode == Enum.KeyCode.E then\n        flying = not flying\n        hum.PlatformStand = flying\n    end\nend)\n\ngame:GetService("RunService").RenderStepped:Connect(function()\n    if flying then\n        local dir = Vector3.zero\n        if UIS:IsKeyDown(Enum.KeyCode.W) then dir += hrp.CFrame.LookVector end\n        if UIS:IsKeyDown(Enum.KeyCode.S) then dir -= hrp.CFrame.LookVector end\n        if UIS:IsKeyDown(Enum.KeyCode.A) then dir -= hrp.CFrame.RightVector end\n        if UIS:IsKeyDown(Enum.KeyCode.D) then dir += hrp.CFrame.RightVector end\n        if UIS:IsKeyDown(Enum.KeyCode.Space) then dir += Vector3.new(0, 1, 0) end\n        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then dir -= Vector3.new(0, 1, 0) end\n        hrp.Velocity = dir * speed\n    end\nend)\n\`\`\`\n\`E\` düyməsi ilə uçuşu yandırıb/söndürə bilərsiniz!`;
+            }
+
+            if (q.includes('speed') || q.includes('suret') || q.includes('sürət') || q.includes('walkspeed')) {
+                return `Roblox-da **Qaçış Sürəti (WalkSpeed)** skripti:\n\n\`\`\`lua\nlocal player = game.Players.LocalPlayer\nlocal character = player.Character or player.CharacterAdded:Wait()\nlocal humanoid = character:WaitForChild("Humanoid")\n\nhumanoid.WalkSpeed = 50 -- Standart dəyər 16-dır\n\`\`\``;
+            }
+
+            if (q.includes('jump') || q.includes('tullan') || q.includes('hop') || q.includes('jumppower')) {
+                return `Roblox-da **Yüksək Tullanma (JumpPower)** skripti:\n\n\`\`\`lua\nlocal player = game.Players.LocalPlayer\nlocal character = player.Character or player.CharacterAdded:Wait()\nlocal humanoid = character:WaitForChild("Humanoid")\n\nhumanoid.UseJumpPower = true\nhumanoid.JumpPower = 100 -- Standart dəyər 50-dir\n\`\`\``;
+            }
+
+            if (q.includes('tp') || q.includes('teleport')) {
+                return `Roblox-da **Teleport Skripti**:\n\n\`\`\`lua\nlocal player = game.Players.LocalPlayer\nlocal character = player.Character or player.CharacterAdded:Wait()\nlocal hrp = character:WaitForChild("HumanoidRootPart")\n\n-- Hədəf mövqe koordinatları:\nhrp.CFrame = CFrame.new(Vector3.new(0, 50, 0))\n\`\`\``;
+            }
+
+            if (q.includes('part') || q.includes('blok') || q.includes('yarat')) {
+                return `Roblox-da **Kodla Part (Obyekt) Yaratmaq**:\n\n\`\`\`lua\nlocal part = Instance.new("Part")\npart.Name = "MənimPartım"\npart.Size = Vector3.new(6, 1, 6)\npart.Position = Vector3.new(0, 10, 0)\npart.Anchored = true\npart.Material = Enum.Material.Neon\npart.Color = Color3.fromRGB(168, 85, 247) -- Neon bənövşəyi\npart.Parent = workspace\n\`\`\``;
+            }
+
+            return `⚡ **${query}** üzrə Roblox Luau skripti:\n\n\`\`\`lua\n-- ${query}\nlocal Players = game:GetService("Players")\nlocal player = Players.LocalPlayer\nlocal character = player.Character or player.CharacterAdded:Wait()\nlocal hrp = character:WaitForChild("HumanoidRootPart")\n\nprint("Sistem işə düşdü: ${query}")\n\`\`\`\nƏlavə parametrlər və ya xüsusi funksiya istəyirsinizsə, dəqiqləşdirilmiş tələbinizi qeyd edin!`;
         }
 
         async function generateAiResponse(promptText, attachment) {
